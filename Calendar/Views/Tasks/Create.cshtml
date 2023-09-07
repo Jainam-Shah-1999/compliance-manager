@@ -1,0 +1,64 @@
+﻿@using Calendar.Models.Enums;
+@model Calendar.Models.Tasks
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Task</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TaskDescription" class="control-label"></label>
+                <input asp-for="TaskDescription" class="form-control" />
+                <span asp-validation-for="TaskDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecurranceFrequency" class="control-label"></label>
+                <select asp-for="RecurranceFrequency" class="form-control" asp-items="Html.GetEnumSelectList<RecurranceFrequencyEnum>()"></select>
+                <span asp-validation-for="RecurranceFrequency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DueDays" class="control-label"></label>
+                <input asp-for="DueDays" class="form-control" />
+                <span asp-validation-for="DueDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BusinessDays" class="control-label"></label>
+                <select asp-for="BusinessDays" class="form-control" asp-items="Html.GetEnumSelectList<BusinessDaysEnum>()"></select>
+                <span asp-validation-for="BusinessDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DueCompletion" class="control-label"></label>
+                <select asp-for="DueCompletion" class="form-control" asp-items="Html.GetEnumSelectList<DueCompletionEnum>()"></select>
+                <span asp-validation-for="DueCompletion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

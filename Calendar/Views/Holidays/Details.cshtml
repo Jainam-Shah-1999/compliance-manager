@@ -1,0 +1,30 @@
+﻿@model Calendar.Models.Holidays
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Holidays</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HolidayDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HolidayDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HolidayName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HolidayName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.HolidayId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
