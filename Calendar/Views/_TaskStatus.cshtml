@@ -1,0 +1,56 @@
+﻿@using Calendar.Models.Enums;
+@model Calendar.Models.TaskStatus
+@* @model Calendar.Models.TaskWithStatus
+ *@
+<table>
+    @*     <thead>
+    <tr>
+    <th>
+    @Html.DisplayNameFor(model => model.TaskStatus)
+    </th>
+    </tr>
+    </thead> *@
+    <tbody>
+        <form asp-controller="TaskStatus" asp-action="Create">
+            <input type="hidden" asp-for="OriginalTaskId" />
+            <input type="hidden" asp-for="GeneratedTaskId" />
+        <tr>
+            <td>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </td>
+        </tr>
+        </form>
+
+    </tbody>
+</table>
+@* <div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GeneratedTaskId" />
+            <div class="form-group">
+                <label asp-for="TaskStatus" class="control-label" ></label>
+                <select asp-for="TaskStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="TaskStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div> *@
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Set the value of Model2.PropertyA based on Model1.Property1
+            var property1Value = $("#Property1").val();
+            $("#PropertyA").val(property1Value);
+        });
+    </script>
+}

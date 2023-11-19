@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Calendar.Models.TaskWithStatus>
+﻿@model Calendar.Models.DueTaskList
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -44,21 +44,33 @@
     ViewBag.Title = "";
 }
 <h5>Past Due</h5>
-<h6 style="color:green">No dues</h6>
-<hr />
-<h5>Due Today</h5>
-<div style="overflow: auto; height: 150px">
-    @await Html.PartialAsync("../_TaskList", Model)
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.PastDue)
 </div>
 <hr />
-<h5>Due This Week</h5>
-<div style="overflow: auto; height: 150px">
-    @await Html.PartialAsync("../_TaskList", Model)
+<h5>Due Today</h5>
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.DueToday)
+</div>
+<hr />
+<h5>Due in a Week</h5>
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.DueThisWeek)
 </div>
 <hr />
 <h5>Due This Month</h5>
-<div style="overflow: auto; height: 150px">
-    @await Html.PartialAsync("../_TaskList", Model)
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.DueThisMonth)
+</div>
+<hr />
+<h5>Due in Six Month</h5>
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.DueNextSixMonth)
+</div>
+<hr />
+<h5>Due in a Year</h5>
+<div>
+    @await Html.PartialAsync("../_TaskList", Model.DueThisYear)
 </div>
 @*<h5>@date.ToString("dd MMMM yyyy")</h5>
 <h3>Month</h3>

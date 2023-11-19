@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();
+
 builder.Services.AddDbContext<CalendarDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
 
 

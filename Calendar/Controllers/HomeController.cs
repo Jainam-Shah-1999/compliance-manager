@@ -98,12 +98,63 @@ namespace Calendar.Controllers
                                       TaskStatus = result.TaskStatus,
                                   };
 
-            var finalData = taskWithAllData
-                    .Where(x =>
-                            (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
-                            && x.TaskStatus == TaskStatusEnum.None);
+            //var finalData = taskWithAllData
+            //        .Where(x =>
+            //                (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
+            //                && x.TaskStatus == TaskStatusEnum.None);
+            var taskIds = new List<int>();
+            var pastDue = taskWithAllData
+                    .Where(x => x.EndDate.Date < DateTime.Today.Date && x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(pastDue.Select(x => x.GeneratedTaskId));
 
-            return View(finalData.ToList());
+            var dueToday = taskWithAllData
+                    .Where(x => !taskIds.Contains(x.GeneratedTaskId) && 
+                            (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
+                            && x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
+
+            var weekEnd = DateTime.Today.AddDays(6 - ((double)DateTime.Today.DayOfWeek) + 1);
+            var dueThisWeek = taskWithAllData
+                    .Where(x =>
+                            !taskIds.Contains(x.GeneratedTaskId) &&
+                            x.EndDate.Date <= weekEnd.Date &&
+                            x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
+
+            var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+            var dueThisMonth = taskWithAllData
+                    .Where(x =>
+                            !taskIds.Contains(x.GeneratedTaskId) &&
+                            x.EndDate.Date <= monthEnd.Date &&
+                            x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(dueThisMonth.Select(x => x.GeneratedTaskId));
+
+            var sixMonthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(6).AddDays(-1);
+            var dueNextSixMonth = taskWithAllData
+                    .Where(x =>
+                            !taskIds.Contains(x.GeneratedTaskId) &&
+                            x.EndDate.Date <= sixMonthEnd.Date &&
+                            x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(dueNextSixMonth.Select(x => x.GeneratedTaskId));
+
+            var yearEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(12).AddDays(-1);
+            var dueThisYear = taskWithAllData
+                    .Where(x =>
+                            !taskIds.Contains(x.GeneratedTaskId) &&
+                            x.EndDate.Date <= yearEnd.Date &&
+                            x.TaskStatus == TaskStatusEnum.None).ToList();
+            taskIds.AddRange(dueThisYear.Select(x => x.GeneratedTaskId));
+
+            DueTaskList dueTaskList = new()
+            {
+                PastDue = pastDue,
+                DueToday = dueToday,
+                DueThisWeek = dueThisWeek,
+                DueThisMonth = dueThisMonth,
+                DueNextSixMonth = dueNextSixMonth,
+                DueThisYear = dueThisYear,
+            };
+            return View(dueTaskList);
         }
 
         public IActionResult Privacy()
