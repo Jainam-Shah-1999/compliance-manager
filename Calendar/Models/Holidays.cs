@@ -10,6 +10,7 @@ namespace Calendar.Models
         public int HolidayId { get; set; }
 
         [DisplayName("Holiday date")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime HolidayDate { get; set; }
 
         [DisplayName("Holiday name")]

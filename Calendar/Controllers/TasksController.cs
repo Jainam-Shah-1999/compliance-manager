@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calendar.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Calendar.Controllers
 {
+    [Authorize]
     public class TasksController : Controller
     {
         private readonly CalendarDbContext _context;

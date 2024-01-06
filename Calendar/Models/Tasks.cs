@@ -1,5 +1,6 @@
 ﻿using Calendar.Models.Enums;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Calendar.Models
 {
@@ -22,6 +23,7 @@ namespace Calendar.Models
         public DueCompletionEnum DueCompletion { get; set; }
 
         [DisplayName("Start date")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
     }
 }

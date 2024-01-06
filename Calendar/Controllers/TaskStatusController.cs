@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calendar.Models;
 using TaskStatus = Calendar.Models.TaskStatus;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Calendar.Models.Enums;
 
 namespace Calendar.Controllers
 {
+    [Authorize]
     public class TaskStatusController : Controller
     {
         private readonly CalendarDbContext _context;
-
+    
         public TaskStatusController(CalendarDbContext context)
         {
             _context = context;
@@ -22,9 +21,43 @@ namespace Calendar.Controllers
         // GET: TaskStatus
         public async Task<IActionResult> Index()
         {
-              return _context.TaskStatus != null ? 
-                          View(await _context.TaskStatus.ToListAsync()) :
-                          Problem("Entity set 'CalendarDbContext.TaskStatus'  is null.");
+            var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
+            var taskGeneratedWithTaskStatus = from taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == _userId)
+                                              join taskGenerated in _context.TaskGenerated on taskStatus.GeneratedTaskId equals taskGenerated.Id 
+                                              into newjoin
+                                              from newjoinresult in newjoin.DefaultIfEmpty()
+                                              select new TaskWithStatus
+                                              {
+                                                  Name = string.Empty,
+                                                  TaskDescription = string.Empty,
+                                                  StartDate = newjoinresult.StartDate,
+                                                  EndDate = newjoinresult.EndDate,
+                                                  OriginalTaskId = taskStatus.OriginalTaskId,
+                                                  GeneratedTaskId = taskStatus.GeneratedTaskId,
+                                                  TaskStatus = taskStatus.Status,
+                                                  TaskStatusId = taskStatus.Id,
+                                              };
+
+            var taskWithAllData = from result in taskGeneratedWithTaskStatus
+                                  join tasks in _context.Tasks on result.OriginalTaskId equals tasks.Id
+                                  into resultjoin
+                                  from resultjoinresult in resultjoin.DefaultIfEmpty()
+                                  select new TaskWithStatus
+                                  {
+                                      Name = resultjoinresult.Name,
+                                      TaskDescription = resultjoinresult.TaskDescription,
+                                      StartDate = result.StartDate,
+                                      EndDate = result.EndDate,
+                                      OriginalTaskId = result.OriginalTaskId,
+                                      GeneratedTaskId = result.GeneratedTaskId,
+                                      TaskStatus = result.TaskStatus,
+                                      TaskStatusId = result.TaskStatusId
+                                  };
+            return View(taskWithAllData.AsEnumerable());
+
+            //return _context.TaskStatus != null ? 
+            //              View(await _context.TaskStatus.Where(x => x.UserId == _userId).ToListAsync()) :
+            //              Problem("Entity set 'CalendarDbContext.TaskStatus'  is null.");
         }
 
         // GET: TaskStatus/Details/5
@@ -55,7 +88,7 @@ namespace Calendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,OriginalTaskId,GeneratedTaskId,Status")] TaskStatus taskStatus)
+        public async Task<IActionResult> Create([Bind("Id,OriginalTaskId,GeneratedTaskId,Status,UserId")] TaskStatus taskStatus)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +120,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,GeneratedTaskId,Status")] TaskStatus taskStatus)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,GeneratedTaskId,Status,UserId")] TaskStatus taskStatus)
         {
             if (id != taskStatus.Id)
             {

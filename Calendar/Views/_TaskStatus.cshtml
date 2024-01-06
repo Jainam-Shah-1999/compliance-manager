@@ -1,4 +1,5 @@
 ﻿@using Calendar.Models.Enums;
+@using System.Security.Claims;
 @model Calendar.Models.TaskStatus
 @* @model Calendar.Models.TaskWithStatus
  *@
@@ -12,6 +13,7 @@
     </thead> *@
     <tbody>
         <form asp-controller="TaskStatus" asp-action="Create">
+            <input type="hidden" asp-for="UserId" value="@User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value" />
             <input type="hidden" asp-for="OriginalTaskId" />
             <input type="hidden" asp-for="GeneratedTaskId" />
         <tr>

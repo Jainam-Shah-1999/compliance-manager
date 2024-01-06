@@ -14,5 +14,7 @@ namespace Calendar.Models
         public int GeneratedTaskId { get; set; }
 
         public TaskStatusEnum Status { get; set; }
+
+        public int UserId { get; set; }
     }
 }

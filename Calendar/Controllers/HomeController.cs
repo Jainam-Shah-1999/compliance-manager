@@ -1,10 +1,11 @@
 ﻿using Calendar.Models;
 using Calendar.Models.Enums;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Linq;
-using Task = Calendar.Models.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Calendar.Controllers
 {
@@ -20,6 +21,7 @@ namespace Calendar.Controllers
             _context = context;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             //return _context.TaskGenerated != null && _context.TaskStatus != null ?
@@ -68,8 +70,10 @@ namespace Calendar.Controllers
             //                };
             //var fullJoin = leftJoin.Union(rightJoin);
 
+            var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
+
             var taskGeneratedWithTaskStatus = from taskGenerated in _context.TaskGenerated
-                                              join taskStatus in _context.TaskStatus on taskGenerated.Id equals taskStatus.GeneratedTaskId
+                                              join taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == _userId) on taskGenerated.Id equals taskStatus.GeneratedTaskId
                                               into newjoin
                                               from newjoinresult in newjoin.DefaultIfEmpty()
                                               select new TaskWithStatus
@@ -157,9 +161,59 @@ namespace Calendar.Controllers
             return View(dueTaskList);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginAsync(string userName, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _context.Users.Where(user => user.Username == userName && user.Password == password).ToList().Single();
+                UserTypeEnum userRole = user.UserType;
+
+                // Create claims for the user
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Surname, user.LastName),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.PrimarySid, user.Username),
+                    new Claim(ClaimTypes.Sid, user.Password),
+                    new Claim(ClaimTypes.Role, userRole.ToString()), // Add user role as a claim
+                };
+
+                // Create ClaimsIdentity
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // Create ClaimsPrincipal
+                var principal = new ClaimsPrincipal(identity);
+
+                // Sign in the user
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                if (userRole == UserTypeEnum.Client)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                if(userRole == UserTypeEnum.Admin)
+                {
+                    return RedirectToAction(nameof(Index), "Tasks");
+                }
+            }
+            throw new Exception("Error Authenticating the user");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction(nameof(Login));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
