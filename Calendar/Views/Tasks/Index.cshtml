@@ -1,14 +1,21 @@
-﻿@model IEnumerable<Calendar.Models.Tasks>
+﻿@using Calendar.Models.Enums
+@model IEnumerable<Calendar.Models.Tasks>
 
 @{
-    ViewData["Title"] = "Task list";
+    ViewData["Title"] = "Index";
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
+{
+    <h3>List of tasks</h3>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+else
+{
+    <h3>List of Penalties</h3>
 }
 
-<h1>Task List</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,53 +26,186 @@
                 @Html.DisplayNameFor(model => model.TaskDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RecurranceFrequency)
+                @Html.DisplayNameFor(model => model.RecurrenceFrequency)
+            </th>
+            @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.DueDays)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BusinessDays)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DueCompletion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsNSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsBSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsMCX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsNCDEX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsCDSL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsNSDL)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.DelaySubmissionNSE)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DueDays)
+                @Html.DisplayNameFor(model => model.NonSubmissionNSE)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BusinessDays)
+                @Html.DisplayNameFor(model => model.DelaySubmissionBSE)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DueCompletion)
+                @Html.DisplayNameFor(model => model.NonSubmissionBSE)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Html.DisplayNameFor(model => model.DelaySubmissionMCX)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.NonSubmissionMCX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DelaySubmissionNCDEX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NonSubmissionNCDEX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DelaySubmissionCDSL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NonSubmissionCDSL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DelaySubmissionNSDL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NonSubmissionNSDL)
+            </th>
+            @* <th>
+            @Html.DisplayNameFor(model => model.MarkInactive)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.InactiveDate)
+            </th> *@
+            @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecurrenceFrequency)
+                </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DueDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BusinessDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DueCompletion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsNSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsBSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsMCX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsNCDEX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsCDSL)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsNSDL)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionNSE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionNSE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionBSE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionBSE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionMCX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionMCX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionNCDEX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionNCDEX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionCDSL)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionCDSL)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DelaySubmissionNSDL)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NonSubmissionNSDL)
+                </td>
+                @* <td>
+            @Html.DisplayFor(modelItem => item.MarkInactive)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TaskDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecurranceFrequency)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BusinessDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueCompletion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+            @Html.DisplayFor(modelItem => item.InactiveDate)
+            </td> *@
+                @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
     </tbody>
 </table>

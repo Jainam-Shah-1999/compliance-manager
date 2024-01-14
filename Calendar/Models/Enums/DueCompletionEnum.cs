@@ -2,7 +2,7 @@
 {
     public enum DueCompletionEnum
     {
-        Precede = 1,
-        Succeed = 2,
+        Succeed = 1,
+        Precede = 2,
     }
 }

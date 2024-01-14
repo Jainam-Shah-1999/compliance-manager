@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Calendar.Controllers
 {
@@ -22,7 +24,7 @@ namespace Calendar.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             //return _context.TaskGenerated != null && _context.TaskStatus != null ?
             //              View(await _context.TaskGenerated.Join(
@@ -84,10 +86,16 @@ namespace Calendar.Controllers
                                                   EndDate = taskGenerated.EndDate,
                                                   OriginalTaskId = taskGenerated.OriginalTaskId,
                                                   GeneratedTaskId = taskGenerated.Id,
-                                                  TaskStatus = newjoinresult == null ? TaskStatusEnum.None : newjoinresult.Status,
+                                                  TaskStatusId = newjoinresult == null ? 0 : newjoinresult.Id,
+                                                  BSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.BSEStatus,
+                                                  NSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSEStatus,
+                                                  MCXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.MCXStatus,
+                                                  NCDEXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NCDEXStatus,
+                                                  CDSLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.CDSLStatus,
+                                                  NSDLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSDLStatus
                                               };
 
-            var taskWithAllData = from result in taskGeneratedWithTaskStatus
+            var taskWithAllData = (from result in taskGeneratedWithTaskStatus
                                   join tasks in _context.Tasks on result.OriginalTaskId equals tasks.Id
                                   into resultjoin
                                   from resultjoinresult in resultjoin.DefaultIfEmpty()
@@ -99,8 +107,14 @@ namespace Calendar.Controllers
                                       EndDate = result.EndDate,
                                       OriginalTaskId = result.OriginalTaskId,
                                       GeneratedTaskId = result.GeneratedTaskId,
-                                      TaskStatus = result.TaskStatus,
-                                  };
+                                      TaskStatusId = result.TaskStatusId,
+                                      BSEStatus = resultjoinresult.IsBSE ? result.BSEStatus : TaskStatusEnum.NotApplicable,
+                                      NSEStatus = resultjoinresult.IsNSE ? result.NSEStatus : TaskStatusEnum.NotApplicable,
+                                      MCXStatus = resultjoinresult.IsMCX ? result.MCXStatus : TaskStatusEnum.NotApplicable,
+                                      NCDEXStatus = resultjoinresult.IsNCDEX ? result.NCDEXStatus : TaskStatusEnum.NotApplicable,
+                                      CDSLStatus = resultjoinresult.IsCDSL ? result.CDSLStatus : TaskStatusEnum.NotApplicable,
+                                      NSDLStatus = resultjoinresult.IsNSDL ? result.NSDLStatus : TaskStatusEnum.NotApplicable
+                                  }).AsEnumerable().OrderBy(x => x.EndDate);
 
             //var finalData = taskWithAllData
             //        .Where(x =>
@@ -108,13 +122,13 @@ namespace Calendar.Controllers
             //                && x.TaskStatus == TaskStatusEnum.None);
             var taskIds = new List<int>();
             var pastDue = taskWithAllData
-                    .Where(x => x.EndDate.Date < DateTime.Today.Date && x.TaskStatus == TaskStatusEnum.None).ToList();
+                    .Where(x => x.EndDate.Date < DateTime.Today.Date && IsPendingStatus(x)).ToList();
             taskIds.AddRange(pastDue.Select(x => x.GeneratedTaskId));
 
             var dueToday = taskWithAllData
-                    .Where(x => !taskIds.Contains(x.GeneratedTaskId) && 
+                    .Where(x => !taskIds.Contains(x.GeneratedTaskId) &&
                             (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
-                            && x.TaskStatus == TaskStatusEnum.None).ToList();
+                            && IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
 
             var weekEnd = DateTime.Today.AddDays(6 - ((double)DateTime.Today.DayOfWeek) + 1);
@@ -122,7 +136,7 @@ namespace Calendar.Controllers
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
                             x.EndDate.Date <= weekEnd.Date &&
-                            x.TaskStatus == TaskStatusEnum.None).ToList();
+                            IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
 
             var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
@@ -130,7 +144,7 @@ namespace Calendar.Controllers
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
                             x.EndDate.Date <= monthEnd.Date &&
-                            x.TaskStatus == TaskStatusEnum.None).ToList();
+                            IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueThisMonth.Select(x => x.GeneratedTaskId));
 
             var sixMonthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(6).AddDays(-1);
@@ -138,7 +152,7 @@ namespace Calendar.Controllers
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
                             x.EndDate.Date <= sixMonthEnd.Date &&
-                            x.TaskStatus == TaskStatusEnum.None).ToList();
+                            IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueNextSixMonth.Select(x => x.GeneratedTaskId));
 
             var yearEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(12).AddDays(-1);
@@ -146,7 +160,7 @@ namespace Calendar.Controllers
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
                             x.EndDate.Date <= yearEnd.Date &&
-                            x.TaskStatus == TaskStatusEnum.None).ToList();
+                            IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueThisYear.Select(x => x.GeneratedTaskId));
 
             DueTaskList dueTaskList = new()
@@ -159,6 +173,16 @@ namespace Calendar.Controllers
                 DueThisYear = dueThisYear,
             };
             return View(dueTaskList);
+        }
+
+        private bool IsPendingStatus(TaskWithStatus task)
+        {
+            return task.BSEStatus == TaskStatusEnum.Pending ||
+                   task.NSEStatus == TaskStatusEnum.Pending ||
+                   task.MCXStatus == TaskStatusEnum.Pending ||
+                   task.NCDEXStatus == TaskStatusEnum.Pending ||
+                   task.CDSLStatus == TaskStatusEnum.Pending ||
+                   task.NSDLStatus == TaskStatusEnum.Pending;
         }
 
         [HttpGet]
@@ -200,7 +224,7 @@ namespace Calendar.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
-                if(userRole == UserTypeEnum.Admin)
+                if (userRole == UserTypeEnum.Admin)
                 {
                     return RedirectToAction(nameof(Index), "Tasks");
                 }

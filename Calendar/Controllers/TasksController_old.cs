@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Calendar.Models;
 using Microsoft.AspNetCore.Authorization;
+using Calendar.Models.Enums;
 
 namespace Calendar.Controllers
 {
     [Authorize]
-    public class TasksController : Controller
+    public class TasksController_old : Controller
     {
         private readonly CalendarDbContext _context;
 
-        public TasksController(CalendarDbContext context)
+        public TasksController_old(CalendarDbContext context)
         {
             _context = context;
         }
@@ -52,7 +53,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TaskDescription,RecurrenceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsNSE,DelaySubmissionNSE,NonSubmissionNSE,IsBSE,DelaySubmissionBSE,NonSubmissionBSE,IsMCX,DelaySubmissionMCX,NonSubmissionMCX,IsNSDEX,DelaySubmissionNSDEX,NonSubmissionNSDEX,IsCDSL,DelaySubmissionCDSL,NonSubmissionCDSL,IsNSDL,DelaySubmissionNSDL,NonSubmissionNSDL,IsActive,InactiveDate")] Tasks task)
+        public async Task<IActionResult> Create([Bind("Id,Name,TaskDescription,RecurranceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsActive,InactiveDate")] Tasks task)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +85,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TaskDescription,RecurrenceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsNSE,DelaySubmissionNSE,NonSubmissionNSE,IsBSE,DelaySubmissionBSE,NonSubmissionBSE,IsMCX,DelaySubmissionMCX,NonSubmissionMCX,IsNSDEX,DelaySubmissionNSDEX,NonSubmissionNSDEX,IsCDSL,DelaySubmissionCDSL,NonSubmissionCDSL,IsNSDL,DelaySubmissionNSDL,NonSubmissionNSDL,IsActive,InactiveDate")] Tasks task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TaskDescription,RecurranceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsActive,InactiveDate")] Tasks task)
         {
             if (id != task.Id)
             {

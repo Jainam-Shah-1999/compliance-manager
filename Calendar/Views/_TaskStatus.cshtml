@@ -12,14 +12,46 @@
     </tr>
     </thead> *@
     <tbody>
-        <form asp-controller="TaskStatus" asp-action="Create">
+        @{
+            string formMethod = string.Empty;
+            if (Model.Id != 0)
+            {
+                formMethod = "Edit";
+            }
+            else
+            {
+                formMethod = "Create";
+            }
+        }
+        <form asp-controller="TaskStatus" asp-action="@formMethod">
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="UserId" value="@User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value" />
             <input type="hidden" asp-for="OriginalTaskId" />
             <input type="hidden" asp-for="GeneratedTaskId" />
         <tr>
             <td>
-                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
+                <select asp-for="BSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="BSEStatus" class="text-danger"></span>
+            </td>
+            <td>
+                <select asp-for="NSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSEStatus" class="text-danger"></span>
+            </td>
+            <td>
+                <select asp-for="MCXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="MCXStatus" class="text-danger"></span>
+            </td>
+            <td>
+                <select asp-for="NCDEXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
+            </td>
+            <td>
+                <select asp-for="CDSLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="CDSLStatus" class="text-danger"></span>
+            </td>
+            <td>
+                <select asp-for="NSDLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSDLStatus" class="text-danger"></span>
             </td>
             <td>&nbsp;</td>
             <td>

@@ -26,9 +26,34 @@
                 <span asp-validation-for="GeneratedTaskId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
+                <label asp-for="BSEStatus" class="control-label"></label>
+                <select asp-for="BSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="BSEStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NSEStatus" class="control-label"></label>
+                <select asp-for="NSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSEStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MCXStatus" class="control-label"></label>
+                <select asp-for="MCXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="MCXStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NCDEXStatus" class="control-label"></label>
+                <select asp-for="NCDEXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CDSLStatus" class="control-label"></label>
+                <select asp-for="CDSLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="CDSLStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NSDLStatus" class="control-label"></label>
+                <select asp-for="NSDLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSDLStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

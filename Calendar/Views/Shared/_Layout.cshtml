@@ -56,6 +56,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TaskStatus" asp-action="Index">Task status</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Penalties</a>
+                            </li>
                         }
                         @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
                         {
@@ -63,7 +66,7 @@
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Tasks</a>
                                 <div class="dropdown-menu">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Manage tasks</a>
-                                    <a class="nav-link text-dark" href="#">Generate tasks</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="TaskGenerated" asp-action="Index">Generate tasks</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">

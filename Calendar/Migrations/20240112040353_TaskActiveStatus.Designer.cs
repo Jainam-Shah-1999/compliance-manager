@@ -4,6 +4,7 @@ using Calendar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Calendar.Migrations
 {
     [DbContext(typeof(CalendarDbContext))]
-    partial class CalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112040353_TaskActiveStatus")]
+    partial class TaskActiveStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,28 +75,13 @@ namespace Calendar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BSEStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CDSLStatus")
-                        .HasColumnType("int");
-
                     b.Property<int>("GeneratedTaskId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MCXStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NCDEXStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NSDLStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NSEStatus")
-                        .HasColumnType("int");
-
                     b.Property<int>("OriginalTaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -115,24 +103,6 @@ namespace Calendar.Migrations
                     b.Property<int>("BusinessDays")
                         .HasColumnType("int");
 
-                    b.Property<int>("DelaySubmissionBSE")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DelaySubmissionCDSL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DelaySubmissionMCX")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DelaySubmissionNCDEX")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DelaySubmissionNSDL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DelaySubmissionNSE")
-                        .HasColumnType("int");
-
                     b.Property<int>("DueCompletion")
                         .HasColumnType("int");
 
@@ -142,50 +112,14 @@ namespace Calendar.Migrations
                     b.Property<DateTime>("InactiveDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsBSE")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsCDSL")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMCX")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsNCDEX")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsNSDL")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsNSE")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MarkInactive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NonSubmissionBSE")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NonSubmissionCDSL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NonSubmissionMCX")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NonSubmissionNCDEX")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NonSubmissionNSDL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NonSubmissionNSE")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecurrenceFrequency")
+                    b.Property<int>("RecurranceFrequency")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")

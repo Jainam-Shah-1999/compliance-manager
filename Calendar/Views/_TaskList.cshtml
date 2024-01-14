@@ -7,49 +7,69 @@
 else
 {
     <div style="overflow: auto; height: 150px">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TaskDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TaskStatus)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TaskDescription)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                         @await Html.PartialAsync("../_TaskStatus", new TaskStatus { GeneratedTaskId = item.GeneratedTaskId, OriginalTaskId = item.OriginalTaskId })
-                    </td>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TaskDescription)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BSEStatus)
+                        &nbsp;
+                        @Html.DisplayNameFor(model => model.NSEStatus)
+                        &nbsp;
+                        @Html.DisplayNameFor(model => model.MCXStatus)
+                        &nbsp;
+                        @Html.DisplayNameFor(model => model.NCDEXStatus)
+                        &nbsp;
+                        @Html.DisplayNameFor(model => model.CDSLStatus)
+                        &nbsp;
+                        @Html.DisplayNameFor(model => model.NSDLStatus)
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TaskDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        <td>
+                            @await Html.PartialAsync("../_TaskStatus", new TaskStatus {
+                                Id = item.TaskStatusId,
+                                GeneratedTaskId = item.GeneratedTaskId,
+                                OriginalTaskId = item.OriginalTaskId,
+                                BSEStatus = item.BSEStatus,
+                                NSEStatus = item.NSEStatus,
+                                MCXStatus = item.MCXStatus,
+                                NCDEXStatus = item.NCDEXStatus,
+                                CDSLStatus = item.CDSLStatus,
+                                NSDLStatus = item.NSDLStatus,
+                            })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
 

@@ -4,11 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h3>Completed tasks</h3>
 
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p> *@
 <table class="table">
     <thead>
         <tr>
@@ -25,7 +25,22 @@
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TaskStatus)
+                @Html.DisplayNameFor(model => model.BSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MCXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NCDEXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSDLStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CDSLStatus)
             </th>
             <th></th>
         </tr>
@@ -47,7 +62,22 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TaskStatus)
+                    @Html.DisplayFor(modelItem => item.BSEStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NSEStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MCXStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NCDEXStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NSDLStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CDSLStatus)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.TaskStatusId">Edit</a> |

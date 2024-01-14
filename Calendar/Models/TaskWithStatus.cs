@@ -23,8 +23,23 @@ namespace Calendar.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
-        [Description("Task status")]
-        public TaskStatusEnum TaskStatus { get; set; }
+        [DisplayName("BSE status")]
+        public TaskStatusEnum BSEStatus { get; set; }
+
+        [DisplayName("NSE status")]
+        public TaskStatusEnum NSEStatus { get; set; }
+
+        [DisplayName("MCX status")]
+        public TaskStatusEnum MCXStatus { get; set; }
+
+        [DisplayName("NCDEX status")]
+        public TaskStatusEnum NCDEXStatus { get; set; }
+
+        [DisplayName("CDSL status")]
+        public TaskStatusEnum CDSLStatus { get; set; }
+
+        [DisplayName("NSDL status")]
+        public TaskStatusEnum NSDLStatus { get; set; }
 
         public int TaskStatusId { get; set; }
     }

@@ -4,6 +4,7 @@ using Calendar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Calendar.Migrations
 {
     [DbContext(typeof(CalendarDbContext))]
-    partial class CalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113220848_TasksInactive")]
+    partial class TasksInactive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,7 +127,7 @@ namespace Calendar.Migrations
                     b.Property<int>("DelaySubmissionMCX")
                         .HasColumnType("int");
 
-                    b.Property<int>("DelaySubmissionNCDEX")
+                    b.Property<int>("DelaySubmissionNSDEX")
                         .HasColumnType("int");
 
                     b.Property<int>("DelaySubmissionNSDL")
@@ -151,7 +154,7 @@ namespace Calendar.Migrations
                     b.Property<bool>("IsMCX")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsNCDEX")
+                    b.Property<bool>("IsNSDEX")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsNSDL")
@@ -176,7 +179,7 @@ namespace Calendar.Migrations
                     b.Property<int>("NonSubmissionMCX")
                         .HasColumnType("int");
 
-                    b.Property<int>("NonSubmissionNCDEX")
+                    b.Property<int>("NonSubmissionNSDEX")
                         .HasColumnType("int");
 
                     b.Property<int>("NonSubmissionNSDL")

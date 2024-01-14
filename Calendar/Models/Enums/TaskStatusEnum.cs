@@ -4,11 +4,8 @@ namespace Calendar.Models.Enums
 {
     public enum TaskStatusEnum
     {
-        None = 0,
-        [Description("Not started")]
-        NotStarted,
+        Pending,
         Completed,
-        [Description("Not applicable")]
         NotApplicable
     }
 }
