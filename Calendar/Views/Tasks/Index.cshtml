@@ -61,42 +61,45 @@ else
                     @Html.DisplayNameFor(model => model.IsNSDL)
                 </th>
             }
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionNSE)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionNSE)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionBSE)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionBSE)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionMCX)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionMCX)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionNCDEX)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionNCDEX)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionCDSL)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionCDSL)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DelaySubmissionNSDL)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NonSubmissionNSDL)
-            </th>
+            @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Client.ToString()))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionNSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionNSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionBSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionBSE)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionMCX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionMCX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionNCDEX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionNCDEX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionCDSL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionCDSL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DelaySubmissionNSDL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NonSubmissionNSDL)
+                </th>
+            }
             @* <th>
             @Html.DisplayNameFor(model => model.MarkInactive)
             </th>
@@ -155,42 +158,45 @@ else
                         @Html.DisplayFor(modelItem => item.IsNSDL)
                     </td>
                 }
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionNSE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionNSE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionBSE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionBSE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionMCX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionMCX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionNCDEX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionNCDEX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionCDSL)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionCDSL)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DelaySubmissionNSDL)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NonSubmissionNSDL)
-                </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Client.ToString()))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionNSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionNSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionBSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionBSE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionMCX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionMCX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionNCDEX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionNCDEX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionCDSL)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionCDSL)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DelaySubmissionNSDL)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NonSubmissionNSDL)
+                    </td>
+                }
                 @* <td>
             @Html.DisplayFor(modelItem => item.MarkInactive)
             </td>

@@ -1,44 +1,124 @@
-﻿@using Calendar.Models.Enums;
+﻿@using Calendar.Models.Enums
+@using System.Security.Claims
 @model Calendar.Models.TaskStatus
 
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>TaskStatus</h4>
+<h4>Pending task</h4>
+<dl class="row">
+    <dt class="col-sm-2">
+        Name:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["TaskName"]
+    </dd>
+    <dt class="col-sm-2">
+        Description:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["TaskDescription"]
+    </dd>
+    <dt class="col-sm-2">
+        Start date:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["TaskStartDate"]
+    </dd>
+    <dt class="col-sm-2">
+        End date:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["TaskEndDate"]
+    </dd>
+</dl>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="container-fluid">
+    <form asp-action="Create">
+        <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="OriginalTaskId" class="control-label"></label>
-                <input asp-for="OriginalTaskId" class="form-control" />
-                <span asp-validation-for="OriginalTaskId" class="text-danger"></span>
+            <input type="hidden" asp-for="OriginalTaskId" />
+            <input type="hidden" asp-for="GeneratedTaskId" />
+            <input type="hidden" asp-for="UserId" value="@User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value" />
+            <input type="hidden" asp-for="FormSubmittedFrom" value="PendingList"/>
+            <div class="form-group col">
+                <label asp-for="BSEStatus" class="control-label"></label>
+                <select asp-for="BSEStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="BSEStatus" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="GeneratedTaskId" class="control-label"></label>
-                <input asp-for="GeneratedTaskId" class="form-control" />
-                <span asp-validation-for="GeneratedTaskId" class="text-danger"></span>
+            <div class="form-group col">
+                <label asp-for="BSEDelayDays" class="control-label"></label>
+                <input asp-for="BSEDelayDays" class="form-control" />
+                <span asp-validation-for="BSEDelayDays" class="text-danger"></span>
             </div>
-            @* <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="NSEStatus" class="control-label"></label>
+                <select asp-for="NSEStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSEStatus" class="text-danger"></span>
             </div>
-        </form>
-    </div>
+            <div class="form-group col">
+                <label asp-for="NSEDelayDays" class="control-label"></label>
+                <input asp-for="NSEDelayDays" class="form-control" />
+                <span asp-validation-for="NSEDelayDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="MCXStatus" class="control-label"></label>
+                <select asp-for="MCXStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="MCXStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="MCXDelayDays" class="control-label"></label>
+                <input asp-for="MCXDelayDays" class="form-control" />
+                <span asp-validation-for="MCXDelayDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="NCDEXStatus" class="control-label"></label>
+                <select asp-for="NCDEXStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="NCDEXDelayDays" class="control-label"></label>
+                <input asp-for="NCDEXDelayDays" class="form-control" />
+                <span asp-validation-for="NCDEXDelayDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="CDSLStatus" class="control-label"></label>
+                <select asp-for="CDSLStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="CDSLStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="CDSLDelayDays" class="control-label"></label>
+                <input asp-for="CDSLDelayDays" class="form-control" />
+                <span asp-validation-for="CDSLDelayDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col">
+                <label asp-for="NSDLStatus" class="control-label"></label>
+                <select asp-for="NSDLStatus" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                <span asp-validation-for="NSDLStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="NSDLDelayDays" class="control-label"></label>
+                <input asp-for="NSDLDelayDays" class="form-control" />
+                <span asp-validation-for="NSDLDelayDays" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group mt-1">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Home">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

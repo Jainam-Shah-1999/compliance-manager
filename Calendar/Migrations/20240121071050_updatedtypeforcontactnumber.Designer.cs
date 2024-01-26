@@ -4,6 +4,7 @@ using Calendar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Calendar.Migrations
 {
     [DbContext(typeof(CalendarDbContext))]
-    partial class CalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240121071050_updatedtypeforcontactnumber")]
+    partial class updatedtypeforcontactnumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +160,6 @@ namespace Calendar.Migrations
                     b.Property<int>("DueDays")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Inactive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("InactiveDate")
                         .HasColumnType("datetime2");
 
@@ -179,6 +179,9 @@ namespace Calendar.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsNSE")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("MarkInactive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -235,9 +238,6 @@ namespace Calendar.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Inactive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()

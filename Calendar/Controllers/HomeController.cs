@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Microsoft.EntityFrameworkCore;
 
 namespace Calendar.Controllers
 {
@@ -102,7 +100,7 @@ namespace Calendar.Controllers
                                   select new TaskWithStatus
                                   {
                                       Name = resultjoinresult.Name,
-                                      TaskDescription = resultjoinresult.TaskDescription,
+                                      TaskDescription = resultjoinresult.TaskDescription ?? String.Empty,
                                       StartDate = result.StartDate,
                                       EndDate = result.EndDate,
                                       OriginalTaskId = result.OriginalTaskId,
@@ -139,43 +137,40 @@ namespace Calendar.Controllers
                             IsPendingStatus(x)).ToList();
             taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
 
-            var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
-            var dueThisMonth = taskWithAllData
-                    .Where(x =>
-                            !taskIds.Contains(x.GeneratedTaskId) &&
-                            x.EndDate.Date <= monthEnd.Date &&
-                            IsPendingStatus(x)).ToList();
-            taskIds.AddRange(dueThisMonth.Select(x => x.GeneratedTaskId));
+            //var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+            //var dueThisMonth = taskWithAllData
+            //        .Where(x =>
+            //                !taskIds.Contains(x.GeneratedTaskId) &&
+            //                x.EndDate.Date <= monthEnd.Date &&
+            //                IsPendingStatus(x)).ToList();
+            //taskIds.AddRange(dueThisMonth.Select(x => x.GeneratedTaskId));
 
-            var sixMonthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(6).AddDays(-1);
-            var dueNextSixMonth = taskWithAllData
-                    .Where(x =>
-                            !taskIds.Contains(x.GeneratedTaskId) &&
-                            x.EndDate.Date <= sixMonthEnd.Date &&
-                            IsPendingStatus(x)).ToList();
-            taskIds.AddRange(dueNextSixMonth.Select(x => x.GeneratedTaskId));
+            //var sixMonthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(6).AddDays(-1);
+            //var dueNextSixMonth = taskWithAllData
+            //        .Where(x =>
+            //                !taskIds.Contains(x.GeneratedTaskId) &&
+            //                x.EndDate.Date <= sixMonthEnd.Date &&
+            //                IsPendingStatus(x)).ToList();
+            //taskIds.AddRange(dueNextSixMonth.Select(x => x.GeneratedTaskId));
 
-            var yearEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(12).AddDays(-1);
-            var dueThisYear = taskWithAllData
-                    .Where(x =>
-                            !taskIds.Contains(x.GeneratedTaskId) &&
-                            x.EndDate.Date <= yearEnd.Date &&
-                            IsPendingStatus(x)).ToList();
-            taskIds.AddRange(dueThisYear.Select(x => x.GeneratedTaskId));
+            //var yearEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(12).AddDays(-1);
+            //var dueThisYear = taskWithAllData
+            //        .Where(x =>
+            //                !taskIds.Contains(x.GeneratedTaskId) &&
+            //                x.EndDate.Date <= yearEnd.Date &&
+            //                IsPendingStatus(x)).ToList();
+            //taskIds.AddRange(dueThisYear.Select(x => x.GeneratedTaskId));
 
             DueTaskList dueTaskList = new()
             {
                 PastDue = pastDue,
                 DueToday = dueToday,
                 DueThisWeek = dueThisWeek,
-                DueThisMonth = dueThisMonth,
-                DueNextSixMonth = dueNextSixMonth,
-                DueThisYear = dueThisYear,
             };
             return View(dueTaskList);
         }
 
-        private bool IsPendingStatus(TaskWithStatus task)
+        private static bool IsPendingStatus(TaskWithStatus task)
         {
             return task.BSEStatus == TaskStatusEnum.Pending ||
                    task.NSEStatus == TaskStatusEnum.Pending ||
@@ -196,40 +191,57 @@ namespace Calendar.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _context.Users.Where(user => user.Username == userName && user.Password == password).ToList().Single();
-                UserTypeEnum userRole = user.UserType;
-
-                // Create claims for the user
-                var claims = new List<Claim>
+                var user = new User();
+                try
                 {
-                    new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.FirstName),
-                    new Claim(ClaimTypes.Surname, user.LastName),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.PrimarySid, user.Username),
-                    new Claim(ClaimTypes.Sid, user.Password),
-                    new Claim(ClaimTypes.Role, userRole.ToString()), // Add user role as a claim
+                    user = _context.Users.Where(user => user.Username == userName && user.Password == password).ToList().Single();
+                }
+                catch 
+                {
+                    user = null;
+                    ViewData["ErrorMessage"] = "The username or password is incorrect, try again.";
+                    return View();
+                }
+
+                if (user != null)
+                {
+                    UserTypeEnum userRole = user.UserType;
+
+                    // Create claims for the user
+                    var claims = new List<Claim>
+                {
+                    new(ClaimTypes.SerialNumber, user.Id.ToString()),
+                    new(ClaimTypes.Name, user.CompanyName),
+                    new(ClaimTypes.GivenName, user.RepresentativeName),
+                    new(ClaimTypes.Email, user.Email),
+                    new(ClaimTypes.MobilePhone, user.ContactNumber.ToString()),
+                    new(ClaimTypes.PrimarySid, user.Username),
+                    new(ClaimTypes.Sid, user.Password),
+                    new(ClaimTypes.Role, userRole.ToString()), // Add user role as a claim
                 };
 
-                // Create ClaimsIdentity
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    // Create ClaimsIdentity
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                // Create ClaimsPrincipal
-                var principal = new ClaimsPrincipal(identity);
+                    // Create ClaimsPrincipal
+                    var principal = new ClaimsPrincipal(identity);
 
-                // Sign in the user
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                    // Sign in the user
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                if (userRole == UserTypeEnum.Client)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                if (userRole == UserTypeEnum.Admin)
-                {
-                    return RedirectToAction(nameof(Index), "Tasks");
+                    if (userRole == UserTypeEnum.Client)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    if (userRole == UserTypeEnum.Admin)
+                    {
+                        return RedirectToAction(nameof(Index), "Dashboard");
+                    }
                 }
             }
-            throw new Exception("Error Authenticating the user");
+            ViewData["ErrorMessage"] = "An error occurred while logging you in, please try again.";
+
+            return View();
         }
 
         [HttpPost]

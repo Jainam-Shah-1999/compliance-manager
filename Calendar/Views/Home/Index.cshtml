@@ -3,62 +3,38 @@
     ViewData["Title"] = "Home Page";
 }
 
+<label for="taskNameFilter" class="control-label">Search by task name</label>
+<input type="text" class="form-control w-25" id="taskNameFilter">
+
 @*https://www.youtube.com/watch?v=6j5l--NEmrQ
 *@
 
-@*<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>*@
-
-@*@model List<CalendarDay>
-
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Tasks</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var day in Model)
-        {
-            <tr>
-                <td>@day.Date.ToShortDateString()</td>
-                <td>
-                    @foreach (var task in day.Tasks)
-                    {
-                        <p>@task.TaskName - @task.TaskDescription</p>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>*@
-
-@{
-    var date = DateTime.Now;
-}
-
-@{
-    ViewBag.Title = "";
-}
 <h5>Past Due</h5>
 <div>
-    @await Html.PartialAsync("../_TaskList", Model.PastDue)
+    @{
+        ViewData["PastDue"] = "true";
+    }
+    @await Html.PartialAsync("../_TaskList", Model.PastDue, ViewData)
 </div>
 <hr />
 <h5>Due Today</h5>
 <div>
-    @await Html.PartialAsync("../_TaskList", Model.DueToday)
+    @{
+        ViewData["PastDue"] = "false";
+    }
+    @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
 </div>
 <hr />
 <h5>Due in a Week</h5>
 <div>
-    @await Html.PartialAsync("../_TaskList", Model.DueThisWeek)
+    @{
+        ViewData["PastDue"] = "false";
+    }
+    @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
 </div>
-<hr />
-<h5>Due This Month</h5>
+
+
+@* <h5>Due This Month</h5>
 <div>
     @await Html.PartialAsync("../_TaskList", Model.DueThisMonth)
 </div>
@@ -71,56 +47,26 @@
 <h5>Due in a Year</h5>
 <div>
     @await Html.PartialAsync("../_TaskList", Model.DueThisYear)
-</div>
-@*<h5>@date.ToString("dd MMMM yyyy")</h5>
-<h3>Month</h3>
-<h5>@date.ToString("MMMM yyyy")</h5>*@
+</div> *@
 
-@*below is a calender view*@
-@*<div class="container-fluid table-responsive">
-    <div class="row">
-    <table class="table table-bordered table-striped table-hover text-center">
-        <thead>
-            <tr>
-                <th>Sun</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-            </tr>
-        </thead>
-        <tbody>@{
-            var getDate = DateTime.Now;
-            var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
-            var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);
-            DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
-            @for (int i = 0; i < 42; i++)
-            {
-                DateTime newdate = startDate.AddDays(i);
-                if (i % 7 == 0 && i > 0)
-                {
-                    @:<tr><tr>
-                }
-                if (newdate.Month != getDate.Month)
-                {
-                        <td class="bg-light"><a>@newdate.Day</a></td>
-                }
-                else
-                {
-                    if(newdate.Day == getDate.Day)
-                    {
-                        <td class="table-success"><a asp-controller="Tasks" asp-action="Edit" asp-route-id="1"><b>@newdate.Day</b></a></td>
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#taskNameFilter').on('input', function () {
+                var filterValue = $(this).val().toLowerCase();
+
+                $('.taskRow').each(function () {
+                    var taskNameCell = $(this).find('.taskName');
+                    var taskName = taskNameCell.text().toLowerCase();
+
+                    if (taskName.includes(filterValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
                     }
-                    else
-                    {
-                        <td><a>@newdate.Day</a></td>
-                    }
-                }
-            }
-            }
-        </tbody>
-    </table>
-</div>
-</div>*@
+                });
+            });
+        });
+    </script>
+}

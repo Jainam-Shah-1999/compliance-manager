@@ -1,0 +1,156 @@
+﻿@using Calendar.Models.Enums
+@model IEnumerable<Calendar.Models.TaskWithStatus>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Clients</h3>
+<div class="row">
+    <label class="control-label">Filters:</label>
+    <div class="col-md-3">
+        <input type="text" id="userNameFilter" placeholder="Enter client name" class="form-control">
+    </div>
+    <div class="col-md-3">
+        <input type="text" id="taskNameFilter" placeholder="Enter task name" class="form-control">
+        </div>
+    <div class="col-md-2">
+        <input type="date" id="startDateFilter" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <input type="date" id="endDateFilter" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <select type="text" id="statusFilter" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()" class="form-select"></select>
+    </div>
+</div>
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table id="taskTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaskDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MCXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NCDEXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSDLStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CDSLStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="taskRow">
+                <td class="userName">
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskDescription)
+                </td>
+                <td class="startDate">
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td class="endDate">
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BSEStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NSEStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MCXStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NCDEXStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NSDLStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CDSLStatus)
+                </td>
+                @* <td>
+            <a asp-action="Edit" asp-route-id="@item.TaskStatusId">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.TaskStatusId">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.TaskStatusId">Delete</a>
+            </td> *@
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#taskNameFilter, #userNameFilter, #startDateFilter, #endDateFilter').on('input', function () {
+                var taskNameFilters = $('#taskNameFilter').val().toLowerCase();
+                var userNameFilters = $('#userNameFilter').val().toLowerCase();
+                var startDateFilter = $('#startDateFilter').val();
+                console.log('hi', !startDateFilter);
+                var endDateFilter = $('#endDateFilter').val();
+                var startDateFormatted = new Date(startDateFilter);
+                var startDateFilterFormatted = ("0" + startDateFormatted.getDate()).slice(-2) + "-" + ("0" + (startDateFormatted.getMonth() + 1)).slice(-2) + "-" + startDateFormatted.getFullYear();
+                var endDateFormatted = new Date(endDateFilter);
+                var endDateFilterFormatted = ("0" + endDateFormatted.getDate()).slice(-2) + "-" + ("0" + (endDateFormatted.getMonth() + 1)).slice(-2) + "-" + endDateFormatted.getFullYear();
+
+                $('.taskRow').each(function () {
+                    var taskName = $(this).find('.taskName').text().toLowerCase().trim();
+                    var userName = $(this).find('.userName').text().toLowerCase().trim();
+                    var startDate = $(this).find('.startDate').text().trim();
+                    var endDate = $(this).find('.endDate').text().trim();
+
+                    var startDateInRange = !startDateFilter || (new Date(startDate) >= new Date(startDateFilterFormatted) || new Date(endDate) >= new Date(startDateFilterFormatted));
+                    var endDateInRange = !endDateFilter || (new Date(startDate) <= new Date(endDateFilterFormatted) || new Date(endDate) <= new Date(endDateFilterFormatted));
+                    console.log('date', !startDateFilter, startDate, new Date(startDate) >= new Date(startDateFilterFormatted), startDateFilterFormatted, endDateFilterFormatted, new Date(startDate) <= new Date(endDateFilterFormatted))
+                    var show = (!userNameFilters && !taskNameFilters && !startDateFilter && !endDateFilter) ||
+                        ((userNameFilters && !taskNameFilters && !startDateFilter && !endDateFilter && userName.includes(userNameFilters)) ||
+                            (userNameFilters && taskNameFilters && !startDateFilter && !endDateFilter && userName.includes(userNameFilters) && taskNameFilters && taskName.includes(taskNameFilters)) ||
+                            ((startDateFilter && startDateInRange) && (endDateFilter && endDateInRange)));
+                    console.log(this, show, startDateInRange, endDateInRange);
+                    if (show) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+
+    </script>
+}

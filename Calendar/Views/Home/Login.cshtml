@@ -1,6 +1,6 @@
-﻿@page
-@* @model YourNamespace.LoginModel
- *@
+﻿@{
+    ViewData["Title"] = "Login";
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <h2>Login</h2>
-
+        <h6 class="text-danger">@ViewData["ErrorMessage"]</h6>
         <form method="post">
             <div class="form-group">
                 <label for="UserName">Username:</label>

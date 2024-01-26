@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calendar.Models;
-using TaskStatus = Calendar.Models.TaskStatus;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using TaskStatus = Calendar.Models.TaskStatus;
 using Calendar.Models.Enums;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Calendar.Controllers
 {
@@ -13,7 +12,7 @@ namespace Calendar.Controllers
     public class TaskStatusController : Controller
     {
         private readonly CalendarDbContext _context;
-    
+
         public TaskStatusController(CalendarDbContext context)
         {
             _context = context;
@@ -24,7 +23,7 @@ namespace Calendar.Controllers
         {
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
             var taskGeneratedWithTaskStatus = from taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == _userId)
-                                              join taskGenerated in _context.TaskGenerated on taskStatus.GeneratedTaskId equals taskGenerated.Id 
+                                              join taskGenerated in _context.TaskGenerated on taskStatus.GeneratedTaskId equals taskGenerated.Id
                                               into newjoin
                                               from newjoinresult in newjoin.DefaultIfEmpty()
                                               select new TaskWithStatus
@@ -51,7 +50,7 @@ namespace Calendar.Controllers
                                   select new TaskWithStatus
                                   {
                                       Name = resultjoinresult.Name,
-                                      TaskDescription = resultjoinresult.TaskDescription,
+                                      TaskDescription = resultjoinresult.TaskDescription ?? string.Empty,
                                       StartDate = result.StartDate,
                                       EndDate = result.EndDate,
                                       OriginalTaskId = result.OriginalTaskId,
@@ -86,20 +85,36 @@ namespace Calendar.Controllers
                 return NotFound();
             }
 
+            SetViewData(taskStatus.OriginalTaskId, taskStatus.GeneratedTaskId);
             return View(taskStatus);
         }
 
         // GET: TaskStatus/Create
-        public IActionResult Create()
+        [HttpGet]
+        public IActionResult Create(int generatedId, int originalId)
         {
-            return View();
+            var task = _context.Tasks.First(x => x.Id == originalId);
+            SetViewData(task.Id, generatedId);
+            var model = new TaskStatus
+            {
+                GeneratedTaskId = generatedId,
+                OriginalTaskId = originalId,
+                BSEStatus = task.IsBSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                NSEStatus = task.IsNSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                MCXStatus = task.IsMCX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                NCDEXStatus = task.IsNCDEX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                CDSLStatus = task.IsCDSL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                NSDLStatus = task.IsNSDL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+            };
+            return View(model);
         }
 
         // POST: TaskStatus/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,NSEStatus,MCXStatus,NCDEXStatus,CDSLStatus,NSDLStatus,UserId")] TaskStatus taskStatus)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int generatedId, int originalId, [Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,BSEDelayDays,NSEStatus,NSEDelayDays,MCXStatus,MCXDelayDays,NCDEXStatus,NCDEXDelayDays,CDSLStatus,CDSLDelayDays,NSDLStatus,NSDLDelayDays,UserId,FormSubmittedFrom")] TaskStatus taskStatus)
         {
             if (ModelState.IsValid && !IsPendingStatus(taskStatus))
             {
@@ -110,7 +125,7 @@ namespace Calendar.Controllers
             return RedirectToAction(nameof(Index), "Home");
         }
 
-        private bool IsPendingStatus(TaskStatus task)
+        private static bool IsPendingStatus(TaskStatus task)
         {
             return task.BSEStatus == TaskStatusEnum.Pending &&
                    task.NSEStatus == TaskStatusEnum.Pending &&
@@ -121,7 +136,7 @@ namespace Calendar.Controllers
         }
 
         // GET: TaskStatus/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string redirectTo)
         {
             if (id == null || _context.TaskStatus == null)
             {
@@ -133,7 +148,20 @@ namespace Calendar.Controllers
             {
                 return NotFound();
             }
+
+            SetViewData(taskStatus.OriginalTaskId, taskStatus.GeneratedTaskId);
+            ViewData["RedirectTo"] = redirectTo ?? "Edit";
             return View(taskStatus);
+        }
+
+        private void SetViewData(int originalTaskId, int generatedTaskId)
+        {
+            var task = _context.Tasks.First(x => x.Id == originalTaskId);
+            var taskGenerated = _context.TaskGenerated.First(x => x.Id == generatedTaskId);
+            ViewData["TaskName"] = task.Name;
+            ViewData["TaskDescription"] = task.TaskDescription;
+            ViewData["TaskStartDate"] = taskGenerated.StartDate.ToShortDateString();
+            ViewData["TaskEndDate"] = taskGenerated.EndDate.ToShortDateString();
         }
 
         // POST: TaskStatus/Edit/5
@@ -141,7 +169,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,NSEStatus,MCXStatus,NCDEXStatus,CDSLStatus,NSDLStatus,UserId")] TaskStatus taskStatus)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,BSEDelayDays,NSEStatus,NSEDelayDays,MCXStatus,MCXDelayDays,NCDEXStatus,NCDEXDelayDays,CDSLStatus,CDSLDelayDays,NSDLStatus,NSDLDelayDays,UserId,FormSubmittedFrom")] TaskStatus taskStatus)
         {
             if (id != taskStatus.Id)
             {
@@ -166,6 +194,10 @@ namespace Calendar.Controllers
                         throw;
                     }
                 }
+                if (taskStatus.FormSubmittedFrom == "Edit")
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index), "Home");
             }
             return View(taskStatus);
@@ -186,6 +218,7 @@ namespace Calendar.Controllers
                 return NotFound();
             }
 
+            SetViewData(taskStatus.OriginalTaskId, taskStatus.GeneratedTaskId);
             return View(taskStatus);
         }
 
@@ -203,14 +236,14 @@ namespace Calendar.Controllers
             {
                 _context.TaskStatus.Remove(taskStatus);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TaskStatusExists(int id)
         {
-          return (_context.TaskStatus?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.TaskStatus?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

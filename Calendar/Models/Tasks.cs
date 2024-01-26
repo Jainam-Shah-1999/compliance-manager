@@ -11,80 +11,83 @@ namespace Calendar.Models
         public string Name { get; set; }
 
         [DisplayName("Description")]
-        public string TaskDescription { get; set; }
+        public string? TaskDescription { get; set; }
 
-        [DisplayName("Recurrence frequency")]
+        [DisplayName("Recurrence")]
         public RecurrenceFrequencyEnum RecurrenceFrequency { get; set; }
 
+        [DisplayName("Due days")]
         public int DueDays { get; set; }
 
+        [DisplayName("Business days")]
         public BusinessDaysEnum BusinessDays { get; set; }
 
+        [DisplayName("Due completion")]
         public DueCompletionEnum DueCompletion { get; set; }
 
         [DisplayName("Start date")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
-        [DisplayName("Applicable for NSE?")]
+        [DisplayName("NSE?")]
         public bool IsNSE { get; set; }
 
-        [DisplayName("Delay submission penalty for NSE")]
+        [DisplayName("Delay submission - NSE")]
         public int DelaySubmissionNSE { get; set; }
 
-        [DisplayName("Non submission penalty for NSE")]
+        [DisplayName("Non submission - NSE")]
         public int NonSubmissionNSE { get; set; }
 
-        [DisplayName("Applicable for BSE?")]
+        [DisplayName("BSE?")]
         public bool IsBSE { get; set; }
 
-        [DisplayName("Delay submission penalty for BSE")]
+        [DisplayName("Delay submission - BSE")]
         public int DelaySubmissionBSE { get; set; }
 
-        [DisplayName("Non-submission penalty for BSE")]
+        [DisplayName("Non submission - BSE")]
         public int NonSubmissionBSE { get; set; }
 
-        [DisplayName("Applicable for MCX?")]
+        [DisplayName("MCX?")]
         public bool IsMCX { get; set; }
 
-        [DisplayName("Delay submission penalty for MCX")]
+        [DisplayName("Delay submission - MCX")]
         public int DelaySubmissionMCX { get; set; }
 
-        [DisplayName("Non-submission penalty for MCX")]
+        [DisplayName("Non submission - MCX")]
         public int NonSubmissionMCX { get; set; }
 
-        [DisplayName("Applicable for NCDEX?")]
+        [DisplayName("NCDEX?")]
         public bool IsNCDEX { get; set; }
 
-        [DisplayName("Delay submission penalty for NCDEX")]
+        [DisplayName("Delay submission - NCDEX")]
         public int DelaySubmissionNCDEX { get; set; }
 
-        [DisplayName("Non-submission penalty for NCDEX")]
+        [DisplayName("Non submission - NCDEX")]
         public int NonSubmissionNCDEX { get; set; }
 
-        [DisplayName("Applicable for CDSL?")]
+        [DisplayName("CDSL?")]
         public bool IsCDSL { get; set; }
 
-        [DisplayName("Delay submission penalty for CDSL")]
+        [DisplayName("Delay submission - CDSL")]
         public int DelaySubmissionCDSL { get; set; }
 
-        [DisplayName("Non-submission penalty for CDSL")]
+        [DisplayName("Non submission - CDSL")]
         public int NonSubmissionCDSL { get; set; }
 
-        [DisplayName("Applicable for NSDL?")]
+        [DisplayName("NSDL?")]
         public bool IsNSDL { get; set; }
 
-        [DisplayName("Delay submission penalty for NSDL")]
+        [DisplayName("Delay submission - NSDL")]
         public int DelaySubmissionNSDL { get; set; }
 
-        [DisplayName("Non-submission penalty for NSDL")]
+        [DisplayName("Non submission - NSDL")]
         public int NonSubmissionNSDL { get; set; }
 
         [DisplayName("Mark Inactive")]
-        public bool MarkInactive { get; set; } = true;
+        public bool Inactive { get; set; }
 
         [DisplayName("Inactive date")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime InactiveDate { get; set; }
+        public DateTime? InactiveDate { get; set; }
     }
 }

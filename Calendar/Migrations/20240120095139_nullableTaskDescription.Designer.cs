@@ -4,6 +4,7 @@ using Calendar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Calendar.Migrations
 {
     [DbContext(typeof(CalendarDbContext))]
-    partial class CalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240120095139_nullableTaskDescription")]
+    partial class nullableTaskDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,13 +75,7 @@ namespace Calendar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BSEDelayDays")
-                        .HasColumnType("int");
-
                     b.Property<int>("BSEStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CDSLDelayDays")
                         .HasColumnType("int");
 
                     b.Property<int>("CDSLStatus")
@@ -87,25 +84,13 @@ namespace Calendar.Migrations
                     b.Property<int>("GeneratedTaskId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MCXDelayDays")
-                        .HasColumnType("int");
-
                     b.Property<int>("MCXStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NCDEXDelayDays")
                         .HasColumnType("int");
 
                     b.Property<int>("NCDEXStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("NSDLDelayDays")
-                        .HasColumnType("int");
-
                     b.Property<int>("NSDLStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NSEDelayDays")
                         .HasColumnType("int");
 
                     b.Property<int>("NSEStatus")
@@ -157,9 +142,6 @@ namespace Calendar.Migrations
                     b.Property<int>("DueDays")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Inactive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("InactiveDate")
                         .HasColumnType("datetime2");
 
@@ -179,6 +161,9 @@ namespace Calendar.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsNSE")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("MarkInactive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -217,7 +202,7 @@ namespace Calendar.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Calendar.Models.User", b =>
+            modelBuilder.Entity("Calendar.Models.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,25 +210,19 @@ namespace Calendar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ContactNumber")
-                        .HasColumnType("float");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Inactive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RepresentativeName")
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

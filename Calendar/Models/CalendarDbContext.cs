@@ -14,6 +14,6 @@ namespace Calendar.Models
 
         public DbSet<Holidays> Holidays { get; set; }
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

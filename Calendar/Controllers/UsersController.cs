@@ -31,14 +31,14 @@ namespace Calendar.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(user);
         }
 
         // GET: Users/Create
@@ -52,15 +52,15 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,Username,Password,UserType")] Users users)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType")] User user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(users);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(users);
+            return View(user);
         }
 
         // GET: Users/Edit/5
@@ -71,12 +71,12 @@ namespace Calendar.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(users);
+            return View(user);
         }
 
         // POST: Users/Edit/5
@@ -84,9 +84,9 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,Username,Password,UserType")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType")] User user)
         {
-            if (id != users.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -95,12 +95,12 @@ namespace Calendar.Controllers
             {
                 try
                 {
-                    _context.Update(users);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsersExists(users.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -111,7 +111,7 @@ namespace Calendar.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(users);
+            return View(user);
         }
 
         // GET: Users/Delete/5
@@ -122,14 +122,14 @@ namespace Calendar.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(user);
         }
 
         // POST: Users/Delete/5
@@ -141,17 +141,17 @@ namespace Calendar.Controllers
             {
                 return Problem("Entity set 'CalendarDbContext.Users'  is null.");
             }
-            var users = await _context.Users.FindAsync(id);
-            if (users != null)
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
             {
-                _context.Users.Remove(users);
+                _context.Users.Remove(user);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsersExists(int id)
+        private bool UserExists(int id)
         {
           return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }

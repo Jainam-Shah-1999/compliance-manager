@@ -7,8 +7,8 @@
 else
 {
     <div style="overflow: auto; height: 150px">
-        <table class="table">
-            <thead>
+        <table id="taskTable" class="table">
+            <thead class="custom-thead">
                 <tr>
                     <th>
                         @Html.DisplayNameFor(model => model.Name)
@@ -22,26 +22,14 @@ else
                     <th>
                         @Html.DisplayNameFor(model => model.EndDate)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.BSEStatus)
-                        &nbsp;
-                        @Html.DisplayNameFor(model => model.NSEStatus)
-                        &nbsp;
-                        @Html.DisplayNameFor(model => model.MCXStatus)
-                        &nbsp;
-                        @Html.DisplayNameFor(model => model.NCDEXStatus)
-                        &nbsp;
-                        @Html.DisplayNameFor(model => model.CDSLStatus)
-                        &nbsp;
-                        @Html.DisplayNameFor(model => model.NSDLStatus)
-                    </th>
+                    <th class="text-center">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
+                    <tr class="taskRow">
+                        <td class="taskName">
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
@@ -54,17 +42,37 @@ else
                             @Html.DisplayFor(modelItem => item.EndDate)
                         </td>
                         <td>
-                            @await Html.PartialAsync("../_TaskStatus", new TaskStatus {
-                                Id = item.TaskStatusId,
-                                GeneratedTaskId = item.GeneratedTaskId,
-                                OriginalTaskId = item.OriginalTaskId,
-                                BSEStatus = item.BSEStatus,
-                                NSEStatus = item.NSEStatus,
-                                MCXStatus = item.MCXStatus,
-                                NCDEXStatus = item.NCDEXStatus,
-                                CDSLStatus = item.CDSLStatus,
-                                NSDLStatus = item.NSDLStatus,
-                            })
+                           @*  @if (ViewData["PastDue"] == "true")
+                            {
+                                var data = new TaskStatus
+                        {
+                            Id = item.TaskStatusId,
+                            GeneratedTaskId = item.GeneratedTaskId,
+                            OriginalTaskId = item.OriginalTaskId,
+                            BSEStatus = item.BSEStatus,
+                            NSEStatus = item.NSEStatus,
+                            MCXStatus = item.MCXStatus,
+                            NCDEXStatus = item.NCDEXStatus,
+                            CDSLStatus = item.CDSLStatus,
+                            NSDLStatus = item.NSDLStatus,
+                        };
+                                <a asp-action="Create" asp-controller="TaskStatus" asp-route-generatedId="@item.GeneratedTaskId" asp-route-originalId="@item.OriginalTaskId">Update Status</a>
+                            }
+                            else if (ViewData["PastDue"] == "false")
+                            { *@
+                                @await Html.PartialAsync("../_TaskStatus", new TaskStatus
+                                {
+                                    Id = item.TaskStatusId,
+                                    GeneratedTaskId = item.GeneratedTaskId,
+                                    OriginalTaskId = item.OriginalTaskId,
+                                    BSEStatus = item.BSEStatus,
+                                    NSEStatus = item.NSEStatus,
+                                    MCXStatus = item.MCXStatus,
+                                    NCDEXStatus = item.NCDEXStatus,
+                                    CDSLStatus = item.CDSLStatus,
+                                    NSDLStatus = item.NSDLStatus,
+                                }, ViewData)
+                            @* } *@
                         </td>
                     </tr>
                 }

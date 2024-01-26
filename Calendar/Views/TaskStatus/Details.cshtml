@@ -4,59 +4,106 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h4>Details</h4>
 
 <div>
-    <h4>TaskStatus</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OriginalTaskId)
+        <dt class="col-sm-4">
+            Name
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OriginalTaskId)
+        <dd class="col-sm-8">
+            @ViewData["TaskName"]
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GeneratedTaskId)
+        <dt class="col-sm-4">
+            Description
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GeneratedTaskId)
+        <dd class="col-sm-8">
+            @ViewData["TaskDescription"]
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            Start date
+        </dt>
+        <dd class="col-sm-8">
+            @ViewData["TaskStartDate"]
+        </dd>
+        <dt class="col-sm-4">
+            End date
+        </dt>
+        <dd class="col-sm-8">
+            @ViewData["TaskEndDate"]
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.BSEStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.BSEStatus)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.BSEDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.BSEDelayDays)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.NSEStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.NSEStatus)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.NSEDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.NSEDelayDays)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.MCXStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.MCXStatus)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.MCXDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.MCXDelayDays)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.NCDEXStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.NCDEXStatus)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.NCDEXDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.NCDEXDelayDays)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.CDSLStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.CDSLStatus)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.CDSLDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.CDSLDelayDays)
+        </dd>
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.NSDLStatus)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.NSDLStatus)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.NSDLDelayDays)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.NSDLDelayDays)
         </dd>
     </dl>
 </div>

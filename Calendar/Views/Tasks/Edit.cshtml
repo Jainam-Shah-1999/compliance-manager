@@ -5,151 +5,170 @@
     ViewData["Title"] = "Edit task";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="container-fluid">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="TaskDescription" class="control-label"></label>
                 <input asp-for="TaskDescription" class="form-control" />
                 <span asp-validation-for="TaskDescription" class="text-danger"></span>
             </div>
-            <div class="form-group">
+        </div>
+        <div class="row">
+            <div class="form-group col">
                 <label asp-for="RecurrenceFrequency" class="control-label"></label>
-                <select asp-for="RecurrenceFrequency" class="form-control" asp-items="Html.GetEnumSelectList<RecurrenceFrequencyEnum>()"></select>
+                <select asp-for="RecurrenceFrequency" class="form-select" asp-items="Html.GetEnumSelectList<RecurrenceFrequencyEnum>()" disabled></select>
+                <select asp-for="RecurrenceFrequency" class="form-select" asp-items="Html.GetEnumSelectList<RecurrenceFrequencyEnum>()" hidden></select>
                 <span asp-validation-for="RecurrenceFrequency" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DueDays" class="control-label"></label>
-                <input asp-for="DueDays" class="form-control" />
+                <input asp-for="DueDays" class="form-control" disabled/>
                 <span asp-validation-for="DueDays" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="BusinessDays" class="control-label"></label>
-                <select asp-for="BusinessDays" class="form-control" asp-items="Html.GetEnumSelectList<BusinessDaysEnum>()"></select>
+                <select asp-for="BusinessDays" class="form-select" asp-items="Html.GetEnumSelectList<BusinessDaysEnum>()" disabled></select>
+                <select asp-for="BusinessDays" class="form-select" asp-items="Html.GetEnumSelectList<BusinessDaysEnum>()" hidden></select>
                 <span asp-validation-for="BusinessDays" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DueCompletion" class="control-label"></label>
-                <select asp-for="DueCompletion" class="form-control" asp-items="Html.GetEnumSelectList<DueCompletionEnum>()"></select>
+                <select asp-for="DueCompletion" class="form-select" asp-items="Html.GetEnumSelectList<DueCompletionEnum>()" disabled></select>
+                <select asp-for="DueCompletion" class="form-select" asp-items="Html.GetEnumSelectList<DueCompletionEnum>()" hidden></select>
                 <span asp-validation-for="DueCompletion" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
+                <input type="datetime" asp-for="StartDate" class="form-control" disabled/>
+                <input type="datetime" asp-for="StartDate" class="form-control" hidden/>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsNSE" /> @Html.DisplayNameFor(model => model.IsNSE)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsNSE" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsNSE" />
+                <span asp-validation-for="IsNSE" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionNSE" class="control-label"></label>
                 <input asp-for="DelaySubmissionNSE" class="form-control" />
                 <span asp-validation-for="DelaySubmissionNSE" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionNSE" class="control-label"></label>
                 <input asp-for="NonSubmissionNSE" class="form-control" />
                 <span asp-validation-for="NonSubmissionNSE" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsBSE" /> @Html.DisplayNameFor(model => model.IsBSE)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsBSE" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsBSE" />
+                <span asp-validation-for="IsBSE" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionBSE" class="control-label"></label>
                 <input asp-for="DelaySubmissionBSE" class="form-control" />
                 <span asp-validation-for="DelaySubmissionBSE" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionBSE" class="control-label"></label>
                 <input asp-for="NonSubmissionBSE" class="form-control" />
                 <span asp-validation-for="NonSubmissionBSE" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsMCX" /> @Html.DisplayNameFor(model => model.IsMCX)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsMCX" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsMCX" />
+                <span asp-validation-for="IsMCX" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionMCX" class="control-label"></label>
                 <input asp-for="DelaySubmissionMCX" class="form-control" />
                 <span asp-validation-for="DelaySubmissionMCX" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionMCX" class="control-label"></label>
                 <input asp-for="NonSubmissionMCX" class="form-control" />
                 <span asp-validation-for="NonSubmissionMCX" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsNCDEX" /> @Html.DisplayNameFor(model => model.IsNCDEX)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsNCDEX" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsNCDEX" />
+                <span asp-validation-for="IsNCDEX" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionNCDEX" class="control-label"></label>
                 <input asp-for="DelaySubmissionNCDEX" class="form-control" />
                 <span asp-validation-for="DelaySubmissionNCDEX" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionNCDEX" class="control-label"></label>
                 <input asp-for="NonSubmissionNCDEX" class="form-control" />
                 <span asp-validation-for="NonSubmissionNCDEX" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCDSL" /> @Html.DisplayNameFor(model => model.IsCDSL)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsCDSL" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsCDSL" />
+                <span asp-validation-for="IsCDSL" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionCDSL" class="control-label"></label>
                 <input asp-for="DelaySubmissionCDSL" class="form-control" />
                 <span asp-validation-for="DelaySubmissionCDSL" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionCDSL" class="control-label"></label>
                 <input asp-for="NonSubmissionCDSL" class="form-control" />
                 <span asp-validation-for="NonSubmissionCDSL" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsNSDL" /> @Html.DisplayNameFor(model => model.IsNSDL)
-                </label>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-1">
+                <label asp-for="IsNSDL" class="control-label"></label>
+                <input class="form-check-input form-control" asp-for="IsNSDL" />
+                <span asp-validation-for="IsNSDL" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="DelaySubmissionNSDL" class="control-label"></label>
                 <input asp-for="DelaySubmissionNSDL" class="form-control" />
                 <span asp-validation-for="DelaySubmissionNSDL" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col">
                 <label asp-for="NonSubmissionNSDL" class="control-label"></label>
                 <input asp-for="NonSubmissionNSDL" class="form-control" />
                 <span asp-validation-for="NonSubmissionNSDL" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="MarkInactive" /> @Html.DisplayNameFor(model => model.MarkInactive)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="InactiveDate" class="control-label"></label>
-                <input asp-for="InactiveDate" class="form-control" />
-                <span asp-validation-for="InactiveDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Inactive" /> @Html.DisplayNameFor(model => model.Inactive)
+            </label>
+        </div>
+        <div class="form-group">
+            <label asp-for="InactiveDate" class="control-label"></label>
+            <input type="date" asp-for="InactiveDate" class="form-control" value="@Model.InactiveDate?.Date.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="InactiveDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 
 <div>
@@ -157,5 +176,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

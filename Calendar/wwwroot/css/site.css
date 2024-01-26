@@ -1,18 +1,40 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+/* Red border for Pending */
+.red-border {
+    border-color: red;
+}
+
+/* Blue border for Not Applicable */
+.blue-border {
+    border-color: blue;
+}
+
+/* Green border for Completed */
+.green-border {
+    border-color: green;
+}
+
+#taskTable .custom-thead th {
+    position: sticky;
+    top: 0;
+    background-color: #FFFFFF;
+    z-index: 1; /* Ensure the header appears above the scrolling content */
 }

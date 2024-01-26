@@ -1,16 +1,30 @@
 ﻿@using Calendar.Models.Enums;
 @using System.Security.Claims;
 @model Calendar.Models.TaskStatus
-@* @model Calendar.Models.TaskWithStatus
- *@
+
 <table>
-    @*     <thead>
-    <tr>
-    <th>
-    @Html.DisplayNameFor(model => model.TaskStatus)
-    </th>
-    </tr>
-    </thead> *@
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSEStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MCXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NCDEXStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CDSLStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NSDLStatus)
+            </th>
+        </tr>
+    </thead>
     <tbody>
         @{
             string formMethod = string.Empty;
@@ -28,63 +42,81 @@
             <input type="hidden" asp-for="UserId" value="@User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value" />
             <input type="hidden" asp-for="OriginalTaskId" />
             <input type="hidden" asp-for="GeneratedTaskId" />
-        <tr>
-            <td>
-                <select asp-for="BSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="BSEStatus" class="text-danger"></span>
-            </td>
-            <td>
-                <select asp-for="NSEStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="NSEStatus" class="text-danger"></span>
-            </td>
-            <td>
-                <select asp-for="MCXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="MCXStatus" class="text-danger"></span>
-            </td>
-            <td>
-                <select asp-for="NCDEXStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
-            </td>
-            <td>
-                <select asp-for="CDSLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="CDSLStatus" class="text-danger"></span>
-            </td>
-            <td>
-                <select asp-for="NSDLStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="NSDLStatus" class="text-danger"></span>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </td>
-        </tr>
+            <input type="hidden" asp-for="FormSubmittedFrom" value="StatusList" />
+            @if (ViewData["PastDue"]?.ToString() == "false")
+            {
+            <tr>
+                <td>
+                    <select asp-for="BSEStatus" class="form-select @(Model.BSEStatus == TaskStatusEnum.Pending ? "red-border" : (Model.BSEStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="BSEStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <select asp-for="NSEStatus" class="form-select @(Model.NSEStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NSEStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="NSEStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <select asp-for="MCXStatus" class="form-select @(Model.MCXStatus == TaskStatusEnum.Pending ? "red-border" : (Model.MCXStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="MCXStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <select asp-for="NCDEXStatus" class="form-select @(Model.NCDEXStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NCDEXStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <select asp-for="CDSLStatus" class="form-select @(Model.CDSLStatus == TaskStatusEnum.Pending ? "red-border" : (Model.CDSLStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="CDSLStatus" class="text-danger"></span>
+                </td>
+                <td area-disabled="true">
+                    <select asp-for="NSDLStatus" class="form-select @(Model.NSDLStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NSDLStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
+                    <span asp-validation-for="NSDLStatus" class="text-danger"></span>
+                </td>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </td>
+            </tr>
+            }
         </form>
+        @if (ViewData["PastDue"]?.ToString() == "true")
+        {
+            <tr>
+                <td>
+                    <input asp-for="BSEStatus" class="form-select @(Model.BSEStatus == TaskStatusEnum.Pending ? "red-border" : (Model.BSEStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="BSEStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <input asp-for="NSEStatus" class="form-select @(Model.NSEStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NSEStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="NSEStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <input asp-for="MCXStatus" class="form-select @(Model.MCXStatus == TaskStatusEnum.Pending ? "red-border" : (Model.MCXStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="MCXStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <input asp-for="NCDEXStatus" class="form-select @(Model.NCDEXStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NCDEXStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="NCDEXStatus" class="text-danger"></span>
+                </td>
+                <td>
+                    <input asp-for="CDSLStatus" class="form-select @(Model.CDSLStatus == TaskStatusEnum.Pending ? "red-border" : (Model.CDSLStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="CDSLStatus" class="text-danger"></span>
+                </td>
+                <td area-disabled="true">
+                    <input asp-for="NSDLStatus" class="form-select @(Model.NSDLStatus == TaskStatusEnum.Pending ? "red-border" : (Model.NSDLStatus == TaskStatusEnum.NotApplicable ? "blue-border" : "green-border"))" disabled />
+                    <span asp-validation-for="NSDLStatus" class="text-danger"></span>
+                </td>
+                <td>&nbsp;</td>
+                <td>
+                    @if(formMethod == "Edit")
+                    {
+                        <a asp-action="@formMethod" class="btn btn-warning" asp-controller="TaskStatus" asp-route-id="@Model.Id" asp-route-redirectTo="Home">Due</a>
+                    }
+                    @if (formMethod == "Create")
+                    {
+                        <a asp-action="@formMethod" class="btn btn-warning" asp-controller="TaskStatus" asp-route-generatedId="@Model.GeneratedTaskId" asp-route-originalId="@Model.OriginalTaskId">Due</a>
+                    }
+                </td>
+            </tr>
 
+        }
     </tbody>
 </table>
-@* <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="GeneratedTaskId" />
-            <div class="form-group">
-                <label asp-for="TaskStatus" class="control-label" ></label>
-                <select asp-for="TaskStatus" class="form-control" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
-                <span asp-validation-for="TaskStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div> *@
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Set the value of Model2.PropertyA based on Model1.Property1
-            var property1Value = $("#Property1").val();
-            $("#PropertyA").val(property1Value);
-        });
-    </script>
-}
