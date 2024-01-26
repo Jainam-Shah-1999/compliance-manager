@@ -2,11 +2,11 @@
 @model IEnumerable<Calendar.Models.TaskWithStatus>
 @if (!Model.Any())
 {
-    <h6 style="color:green">No dues</h6>
+    <h6 style="color:green">@ViewData["Message"]</h6>
 }
 else
 {
-    <div style="overflow: auto; height: 150px">
+    <div style="overflow: auto; height: @ViewData["Height"]">
         <table id="taskTable" class="table">
             <thead class="custom-thead">
                 <tr>

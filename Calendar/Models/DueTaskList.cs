@@ -13,5 +13,7 @@
         public IEnumerable<TaskWithStatus> DueNextSixMonth { get; set; }
 
         public IEnumerable<TaskWithStatus> DueThisYear { get; set; }
+
+        public IEnumerable<TaskWithStatus> FilteredTasks { get; set; }
     }
 }

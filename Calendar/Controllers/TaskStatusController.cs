@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using TaskStatus = Calendar.Models.TaskStatus;
 using Calendar.Models.Enums;
 using System.Security.Claims;
+using Calendar.HelperMethods;
 
 namespace Calendar.Controllers
 {
@@ -19,8 +20,16 @@ namespace Calendar.Controllers
         }
 
         // GET: TaskStatus
-        public IActionResult Index()
+        public IActionResult Index(string returnToList = "false")
         {
+            var filteredTaskWithStatus = HttpContext.Session.GetObject<List<TaskWithStatus>>("FilteredTaskStatus");
+            if (filteredTaskWithStatus?.Any() == true && !bool.Parse(returnToList))
+            {
+                ViewData["Filter"] = "true";
+                return View(filteredTaskWithStatus);
+            }
+            HttpContext.Session.Remove("FilteredTaskStatus");
+            ViewData["Filter"] = "false";
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
             var taskGeneratedWithTaskStatus = from taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == _userId)
                                               join taskGenerated in _context.TaskGenerated on taskStatus.GeneratedTaskId equals taskGenerated.Id
@@ -99,12 +108,12 @@ namespace Calendar.Controllers
             {
                 GeneratedTaskId = generatedId,
                 OriginalTaskId = originalId,
-                BSEStatus = task.IsBSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
-                NSEStatus = task.IsNSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
-                MCXStatus = task.IsMCX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
-                NCDEXStatus = task.IsNCDEX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
-                CDSLStatus = task.IsCDSL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
-                NSDLStatus = task.IsNSDL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable, 
+                BSEStatus = task.IsBSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
+                NSEStatus = task.IsNSE ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
+                MCXStatus = task.IsMCX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
+                NCDEXStatus = task.IsNCDEX ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
+                CDSLStatus = task.IsCDSL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
+                NSDLStatus = task.IsNSDL ? TaskStatusEnum.Pending : TaskStatusEnum.NotApplicable,
             };
             return View(model);
         }
@@ -120,6 +129,8 @@ namespace Calendar.Controllers
             {
                 _context.Add(taskStatus);
                 await _context.SaveChangesAsync();
+                UpdateFilteredDataInSession(taskStatus, taskStatus.GeneratedTaskId, "FilteredDueTask");
+                UpdateFilteredDataInSession(taskStatus, taskStatus.GeneratedTaskId, "FilteredTaskStatus");
                 return RedirectToAction(nameof(Index), "Home");
             }
             return RedirectToAction(nameof(Index), "Home");
@@ -182,6 +193,8 @@ namespace Calendar.Controllers
                 {
                     _context.Update(taskStatus);
                     await _context.SaveChangesAsync();
+                    UpdateFilteredDataInSession(taskStatus, null, "FilteredTaskStatus");
+                    UpdateFilteredDataInSession(taskStatus, null, "FilteredDueTask");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -194,6 +207,7 @@ namespace Calendar.Controllers
                         throw;
                     }
                 }
+
                 if (taskStatus.FormSubmittedFrom == "Edit")
                 {
                     return RedirectToAction(nameof(Index));
@@ -244,6 +258,30 @@ namespace Calendar.Controllers
         private bool TaskStatusExists(int id)
         {
             return (_context.TaskStatus?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private void UpdateFilteredDataInSession(TaskStatus taskStatus, int? generatedTaskId, string key)
+        {
+            var filteredTaskWithStatus = HttpContext.Session.GetObject<List<TaskWithStatus>>(key);
+
+            if (filteredTaskWithStatus?.Any() == true)
+            {
+                filteredTaskWithStatus = filteredTaskWithStatus?
+                .Select(x => x.TaskStatusId == taskStatus.Id || x.GeneratedTaskId == generatedTaskId ? UpdateTask(x, taskStatus) : x)
+                .ToList();
+                HttpContext.Session.SetObject(key, filteredTaskWithStatus);
+            }
+        }
+
+        private static TaskWithStatus UpdateTask(TaskWithStatus x, TaskStatus taskStatus)
+        {
+            x.BSEStatus = taskStatus.BSEStatus;
+            x.NSEStatus = taskStatus.NSEStatus;
+            x.MCXStatus = taskStatus.MCXStatus;
+            x.NCDEXStatus = taskStatus.NCDEXStatus;
+            x.CDSLStatus = taskStatus.CDSLStatus;
+            x.NSDLStatus = taskStatus.NSDLStatus;
+            return x;
         }
     }
 }

@@ -2,36 +2,67 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<div class="container-fluid">
+    <div class="row">
+        <div class="form-group col-2">
+            <label for="taskNameFilter" class="control-label" data-toggle="tooltip" title="Search in this page">Find</label>
+            <input type="text" class="form-control" id="taskNameFilter">
+        </div>
+        <div class="form-group col">
+            @{
+                ViewData["Page"] = "Home";
+            }
+            @await Html.PartialAsync("../_TaskFilter", model: null, ViewData)
+        </div>
+    </div>
+</div>
 
-<label for="taskNameFilter" class="control-label">Search by task name</label>
-<input type="text" class="form-control w-25" id="taskNameFilter">
 
+<hr />
 @*https://www.youtube.com/watch?v=6j5l--NEmrQ
 *@
 
-<h5>Past Due</h5>
-<div>
-    @{
-        ViewData["PastDue"] = "true";
-    }
-    @await Html.PartialAsync("../_TaskList", Model.PastDue, ViewData)
-</div>
-<hr />
-<h5>Due Today</h5>
-<div>
-    @{
-        ViewData["PastDue"] = "false";
-    }
-    @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
-</div>
-<hr />
-<h5>Due in a Week</h5>
-<div>
-    @{
-        ViewData["PastDue"] = "false";
-    }
-    @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
-</div>
+@if (Model.FilteredTasks.Any())
+{
+    <a asp-action="Index" asp-route-returnToHome="true">Turn off filter</a>
+    <h5>Results: @Model.FilteredTasks.Count()</h5>
+    ViewData["PastDue"] = "false";
+    ViewData["Height"] = "100vh";
+    ViewData["Message"] = "No result found";
+    @await Html.PartialAsync("../_TaskList", Model.FilteredTasks, ViewData)
+}
+else
+{
+    <h5>Past Due</h5>
+    <div>
+        @{
+            ViewData["PastDue"] = "true";
+            ViewData["Height"] = "150px";
+            ViewData["Message"] = "No Dues";
+        }
+        @await Html.PartialAsync("../_TaskList", Model.PastDue, ViewData)
+    </div>
+    <hr />
+    <h5>Due Today</h5>
+    <div>
+        @{
+            ViewData["PastDue"] = "false";
+            ViewData["Height"] = "150px";
+            ViewData["Message"] = "No Dues";
+        }
+        @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
+    </div>
+    <hr />
+    <h5>Due in a Week</h5>
+    <div>
+        @{
+            ViewData["PastDue"] = "false";
+            ViewData["Height"] = "150px";
+            ViewData["Message"] = "No Dues";
+        }
+        @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
+    </div>
+}
 
 
 @* <h5>Due This Month</h5>

@@ -38,3 +38,23 @@ body {
     background-color: #FFFFFF;
     z-index: 1; /* Ensure the header appears above the scrolling content */
 }
+
+.filter-group {
+    padding: 10px;
+    border: 1px solid;
+    border-color: #6c757d;
+    margin: 10px;
+}
+
+.filter-group > label {
+    position: relative;
+    top: -25px;
+    left: 10px;
+    width: auto;
+    height: auto;
+    background-color: white;
+}
+
+.filter-group .row {
+    margin-top: -25px;
+}

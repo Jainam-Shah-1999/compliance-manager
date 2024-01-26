@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Calendar.HelperMethods;
 
 namespace Calendar.Controllers
 {
@@ -22,53 +23,21 @@ namespace Calendar.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(string returnToHome = "false")
         {
-            //return _context.TaskGenerated != null && _context.TaskStatus != null ?
-            //              View(await _context.TaskGenerated.Join(
-            //                  _context.Tasks, 
-            //                  tg => tg.OriginalTaskId,
-            //                  ts => ts.Id,
-            //                  (tg, ts) => new TaskWithStatus { Name = ts.Name, TaskDescription = ts.TaskDescription, StartDate = tg.StartDate, EndDate = tg.EndDate})
-            //              .ToListAsync()) :
-            //              Problem("Entity set 'CalendarDbContext.TaskGenerated'  is null.");
-
-            //var query = from taskGenerated in _context.TaskGenerated
-            //            join tasks in _context.Tasks on taskGenerated.OriginalTaskId equals tasks.Id
-            //            join taskStatus in _context.TaskStatus on taskGenerated.Id equals taskStatus.Id
-            //            select new TaskWithStatus { Name = tasks.Name, TaskDescription = tasks.TaskDescription, StartDate = taskGenerated.StartDate, EndDate = taskGenerated.EndDate, TaskStatus = taskStatus.Status };
-            //return View(query.ToList());
-
-            //var leftJoin = from taskGenerated in _context.TaskGenerated
-            //               join tasks in _context.Tasks on taskGenerated.OriginalTaskId equals tasks.Id
-            //               into leftjoin
-            //               from leftjoinresult in leftjoin.DefaultIfEmpty()
-            //               select new TaskWithStatus
-            //               {
-            //                   Name = leftjoinresult.Name,
-            //                   TaskDescription = leftjoinresult.TaskDescription,
-            //                   StartDate = taskGenerated.StartDate,
-            //                   EndDate = taskGenerated.EndDate,
-            //                   OriginalTaskId = leftjoinresult.Id,
-            //                   GeneratedTaskId = taskGenerated.Id,
-            //                   TaskStatus = TaskStatusEnum.None,
-            //               };
-
-            //var rightJoin = from tasks in _context.Tasks
-            //                join taskStatus in _context.TaskStatus on tasks.Id equals taskStatus.OriginalTaskId
-            //                into rightjoin
-            //                from rightjoinresult in rightjoin.DefaultIfEmpty()
-            //                select new TaskWithStatus
-            //                {
-            //                    Name = tasks.Name,
-            //                    TaskDescription = tasks.TaskDescription,
-            //                    StartDate = DateTime.Now,
-            //                    EndDate = DateTime.Now,
-            //                    OriginalTaskId = rightjoinresult == null ? 0 : rightjoinresult.OriginalTaskId,
-            //                    GeneratedTaskId = rightjoinresult == null ? 0 : rightjoinresult.GeneratedTaskId,
-            //                    TaskStatus = rightjoinresult == null ? TaskStatusEnum.None : rightjoinresult.Status,
-            //                };
-            //var fullJoin = leftJoin.Union(rightJoin);
+            var filteredTaskWithStatus = HttpContext.Session.GetObject<List<TaskWithStatus>>("FilteredDueTask");
+            if (filteredTaskWithStatus?.Any() == true && !bool.Parse(returnToHome))
+            {
+                DueTaskList filtered = new()
+                {
+                    PastDue = new List<TaskWithStatus>(),
+                    DueToday = new List<TaskWithStatus>(),
+                    DueThisWeek = new List<TaskWithStatus>(),
+                    FilteredTasks = filteredTaskWithStatus.Where(x => TaskStatusHelper.AnyPendingStatus(x))
+                };
+                return View(filtered);
+            }
+            HttpContext.Session.Remove("FilteredDueTask");
 
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
 
@@ -94,39 +63,35 @@ namespace Calendar.Controllers
                                               };
 
             var taskWithAllData = (from result in taskGeneratedWithTaskStatus
-                                  join tasks in _context.Tasks on result.OriginalTaskId equals tasks.Id
-                                  into resultjoin
-                                  from resultjoinresult in resultjoin.DefaultIfEmpty()
-                                  select new TaskWithStatus
-                                  {
-                                      Name = resultjoinresult.Name,
-                                      TaskDescription = resultjoinresult.TaskDescription ?? String.Empty,
-                                      StartDate = result.StartDate,
-                                      EndDate = result.EndDate,
-                                      OriginalTaskId = result.OriginalTaskId,
-                                      GeneratedTaskId = result.GeneratedTaskId,
-                                      TaskStatusId = result.TaskStatusId,
-                                      BSEStatus = resultjoinresult.IsBSE ? result.BSEStatus : TaskStatusEnum.NotApplicable,
-                                      NSEStatus = resultjoinresult.IsNSE ? result.NSEStatus : TaskStatusEnum.NotApplicable,
-                                      MCXStatus = resultjoinresult.IsMCX ? result.MCXStatus : TaskStatusEnum.NotApplicable,
-                                      NCDEXStatus = resultjoinresult.IsNCDEX ? result.NCDEXStatus : TaskStatusEnum.NotApplicable,
-                                      CDSLStatus = resultjoinresult.IsCDSL ? result.CDSLStatus : TaskStatusEnum.NotApplicable,
-                                      NSDLStatus = resultjoinresult.IsNSDL ? result.NSDLStatus : TaskStatusEnum.NotApplicable
-                                  }).AsEnumerable().OrderBy(x => x.EndDate);
+                                   join tasks in _context.Tasks on result.OriginalTaskId equals tasks.Id
+                                   into resultjoin
+                                   from resultjoinresult in resultjoin.DefaultIfEmpty()
+                                   select new TaskWithStatus
+                                   {
+                                       Name = resultjoinresult.Name,
+                                       TaskDescription = resultjoinresult.TaskDescription ?? String.Empty,
+                                       StartDate = result.StartDate,
+                                       EndDate = result.EndDate,
+                                       OriginalTaskId = result.OriginalTaskId,
+                                       GeneratedTaskId = result.GeneratedTaskId,
+                                       TaskStatusId = result.TaskStatusId,
+                                       BSEStatus = resultjoinresult.IsBSE ? result.BSEStatus : TaskStatusEnum.NotApplicable,
+                                       NSEStatus = resultjoinresult.IsNSE ? result.NSEStatus : TaskStatusEnum.NotApplicable,
+                                       MCXStatus = resultjoinresult.IsMCX ? result.MCXStatus : TaskStatusEnum.NotApplicable,
+                                       NCDEXStatus = resultjoinresult.IsNCDEX ? result.NCDEXStatus : TaskStatusEnum.NotApplicable,
+                                       CDSLStatus = resultjoinresult.IsCDSL ? result.CDSLStatus : TaskStatusEnum.NotApplicable,
+                                       NSDLStatus = resultjoinresult.IsNSDL ? result.NSDLStatus : TaskStatusEnum.NotApplicable
+                                   }).AsEnumerable().OrderBy(x => x.EndDate);
 
-            //var finalData = taskWithAllData
-            //        .Where(x =>
-            //                (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
-            //                && x.TaskStatus == TaskStatusEnum.None);
             var taskIds = new List<int>();
             var pastDue = taskWithAllData
-                    .Where(x => x.EndDate.Date < DateTime.Today.Date && IsPendingStatus(x)).ToList();
+                    .Where(x => x.EndDate.Date < DateTime.Today.Date && TaskStatusHelper.AnyPendingStatus(x)).ToList();
             taskIds.AddRange(pastDue.Select(x => x.GeneratedTaskId));
 
             var dueToday = taskWithAllData
                     .Where(x => !taskIds.Contains(x.GeneratedTaskId) &&
                             (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
-                            && IsPendingStatus(x)).ToList();
+                            && TaskStatusHelper.AnyPendingStatus(x)).ToList();
             taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
 
             var weekEnd = DateTime.Today.AddDays(6 - ((double)DateTime.Today.DayOfWeek) + 1);
@@ -134,7 +99,7 @@ namespace Calendar.Controllers
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
                             x.EndDate.Date <= weekEnd.Date &&
-                            IsPendingStatus(x)).ToList();
+                            TaskStatusHelper.AnyPendingStatus(x)).ToList();
             taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
 
             //var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
@@ -166,19 +131,11 @@ namespace Calendar.Controllers
                 PastDue = pastDue,
                 DueToday = dueToday,
                 DueThisWeek = dueThisWeek,
+                FilteredTasks = new List<TaskWithStatus>(),
             };
             return View(dueTaskList);
         }
 
-        private static bool IsPendingStatus(TaskWithStatus task)
-        {
-            return task.BSEStatus == TaskStatusEnum.Pending ||
-                   task.NSEStatus == TaskStatusEnum.Pending ||
-                   task.MCXStatus == TaskStatusEnum.Pending ||
-                   task.NCDEXStatus == TaskStatusEnum.Pending ||
-                   task.CDSLStatus == TaskStatusEnum.Pending ||
-                   task.NSDLStatus == TaskStatusEnum.Pending;
-        }
 
         [HttpGet]
         public IActionResult Login()
@@ -196,7 +153,7 @@ namespace Calendar.Controllers
                 {
                     user = _context.Users.Where(user => user.Username == userName && user.Password == password).ToList().Single();
                 }
-                catch 
+                catch
                 {
                     user = null;
                     ViewData["ErrorMessage"] = "The username or password is incorrect, try again.";

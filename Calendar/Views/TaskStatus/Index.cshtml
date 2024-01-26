@@ -4,11 +4,29 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>Completed tasks</h3>
+<h5>Completed tasks</h5>
+<div class="container-fluid">
+    <div class="row">
+        <div class="form-group col-2">
+            <label for="taskNameFilter" class="control-label" data-toggle="tooltip" title="Search in this page">Find</label>
+            <input type="text" class="form-control" id="taskNameFilter">
+        </div>
+        <div class="form-group col">
+            @{
+                ViewData["Page"] = "TaskStatus";
+            }
+            @await Html.PartialAsync("../_TaskFilter", model: null, ViewData)
+        </div>
+    </div>
+</div>
 
 @* <p>
     <a asp-action="Create">Create New</a>
 </p> *@
+@if (ViewData["Filter"]?.ToString() == "true")
+{
+    <a asp-action="Index" asp-route-returnToList="true">Turn off filter</a>
+}
 <table class="table">
     <thead>
         <tr>
@@ -48,8 +66,8 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
+            <tr class="taskRow">
+                <td class="taskName">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
@@ -88,3 +106,25 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#taskNameFilter').on('input', function () {
+                var filterValue = $(this).val().toLowerCase();
+
+                $('.taskRow').each(function () {
+                    var taskNameCell = $(this).find('.taskName');
+                    var taskName = taskNameCell.text().toLowerCase();
+
+                    if (taskName.includes(filterValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
