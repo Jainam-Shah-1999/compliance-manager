@@ -160,6 +160,12 @@ namespace Calendar.Controllers
                     return View();
                 }
 
+                if (user?.Inactive == true)
+                {
+                    ViewData["ErrorMessage"] = "The account is disabled, contact administrator.";
+                    return View();
+                }
+
                 if (user != null)
                 {
                     UserTypeEnum userRole = user.UserType;

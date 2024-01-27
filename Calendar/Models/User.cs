@@ -8,16 +8,16 @@ namespace Calendar.Models
     {
         public int Id { get; set; }
 
-        [DisplayName("Company Name")]
+        [DisplayName("Company name")]
         public string CompanyName { get; set; }
 
-        [DisplayName("Representative Name")]
+        [DisplayName("Representative name")]
         public string RepresentativeName { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
 
-        [DisplayName("Contact Number")]
+        [DisplayName("Contact number")]
         public double ContactNumber { get; set; }
 
         public string Username { get; set; }
@@ -27,7 +27,7 @@ namespace Calendar.Models
         [DisplayName("User type")]
         public UserTypeEnum UserType { get; set; }
 
-        [DisplayName("Mark Inactive")]
+        [DisplayName("Mark inactive")]
         public bool Inactive { get; set; }
     }
 }

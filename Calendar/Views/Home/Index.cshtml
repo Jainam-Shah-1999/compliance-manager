@@ -29,6 +29,7 @@
     ViewData["PastDue"] = "false";
     ViewData["Height"] = "100vh";
     ViewData["Message"] = "No result found";
+    ViewData["FormSubmittedFrom"] = "StatusList";
     @await Html.PartialAsync("../_TaskList", Model.FilteredTasks, ViewData)
 }
 else
@@ -39,6 +40,7 @@ else
             ViewData["PastDue"] = "true";
             ViewData["Height"] = "150px";
             ViewData["Message"] = "No Dues";
+            ViewData["FormSubmittedFrom"] = "StatusList";
         }
         @await Html.PartialAsync("../_TaskList", Model.PastDue, ViewData)
     </div>
@@ -49,6 +51,7 @@ else
             ViewData["PastDue"] = "false";
             ViewData["Height"] = "150px";
             ViewData["Message"] = "No Dues";
+            ViewData["FormSubmittedFrom"] = "StatusList";
         }
         @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
     </div>
@@ -59,6 +62,7 @@ else
             ViewData["PastDue"] = "false";
             ViewData["Height"] = "150px";
             ViewData["Message"] = "No Dues";
+            ViewData["FormSubmittedFrom"] = "StatusList";
         }
         @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
     </div>

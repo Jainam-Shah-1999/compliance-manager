@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Calendar.Models.TaskWithStatus>
+@{
+    ViewData["Title"] = "UserTaskStatus";
+}
+<dl class="row">
+    <dt class="col-sm-2">
+        Company name:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["CompanyName"]
+    </dd>
+    <dt class="col-sm-2">
+        Representative name:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["RepresentativeName"]
+    </dd>
+    <dt class="col-sm-2">
+        Tasks status:
+    </dt>
+    <dd class="col-sm-10">
+        @ViewData["TaskStatus"]
+    </dd>
+</dl>
+
+<div class="row">
+    <label class="control-label">Find</label>
+    <div class="col-md-3">
+        <input type="text" id="taskNameFilter" placeholder="Enter task name" class="form-control">
+    </div>
+</div>
+<hr />
+<div>
+    @{
+        var query = @Context.Request.QueryString.Value?.Replace("?", "");
+        ViewData["PastDue"] = "false";
+        ViewData["Height"] = "100vh";
+        ViewData["Message"] = "No results found";
+        ViewData["UserId"] = query?.Split("&")[0].Replace("userId=", "");
+        ViewData["FormSubmittedFrom"] = query?.Split("&")[1].Replace("status=", "");
+    }
+    @await Html.PartialAsync("../_TaskList", Model, ViewData)
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#taskNameFilter').on('input', function () {
+                var filterValue = $(this).val().toLowerCase();
+
+                $('.taskRow').each(function () {
+                    var taskNameCell = $(this).find('.taskName');
+                    var taskName = taskNameCell.text().toLowerCase();
+
+                    if (taskName.includes(filterValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

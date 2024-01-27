@@ -212,6 +212,10 @@ namespace Calendar.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
+                if (taskStatus.FormSubmittedFrom == "Pending" || taskStatus.FormSubmittedFrom == "Completed")
+                {
+                    return RedirectToAction("UserTaskStatus", "Dashboard", new { userId = taskStatus.UserId, status = taskStatus.FormSubmittedFrom });
+                }
                 return RedirectToAction(nameof(Index), "Home");
             }
             return View(taskStatus);

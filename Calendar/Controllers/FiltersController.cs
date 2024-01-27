@@ -23,18 +23,16 @@ namespace Calendar.Controllers
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
             UserTypeEnum userType = (UserTypeEnum)Enum.Parse(typeof(UserTypeEnum), User.Claims.First(claim => claim.Type == ClaimTypes.Role).Value);
 
-            IQueryable<TaskWithStatus>? taskGeneratedWithTaskStatus = null;
-
             if (filter.RedirectTo == "Home")
             {
-                taskGeneratedWithTaskStatus = GetTaskGeneratedWithTaskStatus(_userId, userType, filter);
+                var taskGeneratedWithTaskStatus = GetTaskGeneratedWithTaskStatus(_userId, userType, filter);
                 HttpContext.Session.SetObject("FilteredDueTask",
                     GetFinalTaskStatusData(taskGeneratedWithTaskStatus, filter).Where(x => TaskStatusHelper.AnyPendingStatus(x)));
                 return RedirectToAction(nameof(Index), filter.RedirectTo);
             }
             else if (filter.RedirectTo == "TaskStatus")
             {
-                taskGeneratedWithTaskStatus = GetTaskStatusWithTaskGenerated(_userId, userType, filter);
+                var taskGeneratedWithTaskStatus = GetTaskStatusWithTaskGenerated(_userId, userType, filter);
                 HttpContext.Session.SetObject("FilteredTaskStatus",
                     GetFinalTaskStatusDataForTaskStatusList(taskGeneratedWithTaskStatus, filter));
                 return RedirectToAction(nameof(Index), filter.RedirectTo);

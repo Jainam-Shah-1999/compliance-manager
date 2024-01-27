@@ -6,9 +6,9 @@
 }
 @if (User.Identity.IsAuthenticated && User.IsInRole(UserTypeEnum.Admin.ToString()))
 {
-    <h3>List of tasks</h3>
+    <h5>Tasks</h5>
     <p>
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create">Add task</a>
     </p>
 }
 else

@@ -18,9 +18,9 @@ namespace Calendar.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-              return _context.Users != null ? 
-                          View(await _context.Users.ToListAsync()) :
-                          Problem("Entity set 'CalendarDbContext.Users'  is null.");
+            return _context.Users != null ?
+                        View(await _context.Users.ToListAsync()) :
+                        Problem("Entity set 'CalendarDbContext.Users'  is null.");
         }
 
         // GET: Users/Details/5
@@ -52,7 +52,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType")] User user)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType,Inactive")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace Calendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType,Inactive")] User user)
         {
             if (id != user.Id)
             {
@@ -145,15 +145,16 @@ namespace Calendar.Controllers
             if (user != null)
             {
                 _context.Users.Remove(user);
+                _context.TaskStatus.Where(x => x.UserId == user.Id);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-          return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

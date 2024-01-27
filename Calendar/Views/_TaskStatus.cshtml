@@ -36,13 +36,22 @@
             {
                 formMethod = "Create";
             }
+            string userId = string.Empty;
+            if (ViewData.ContainsKey("UserId"))
+            {
+                userId = ViewData["UserId"]?.ToString() ?? string.Empty;
+            }
+            else
+            {
+                userId = User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value;
+            }
         }
         <form asp-controller="TaskStatus" asp-action="@formMethod">
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="UserId" value="@User.Claims.First(x => x.Type == ClaimTypes.SerialNumber).Value" />
+            <input type="hidden" asp-for="UserId" value="@userId" />
             <input type="hidden" asp-for="OriginalTaskId" />
             <input type="hidden" asp-for="GeneratedTaskId" />
-            <input type="hidden" asp-for="FormSubmittedFrom" value="StatusList" />
+            <input type="hidden" asp-for="FormSubmittedFrom" value="@ViewData["FormSubmittedFrom"]" />
             @if (ViewData["PastDue"]?.ToString() == "false")
             {
             <tr>
@@ -106,7 +115,7 @@
                 </td>
                 <td>&nbsp;</td>
                 <td>
-                    @if(formMethod == "Edit")
+                    @if (formMethod == "Edit")
                     {
                         <a asp-action="@formMethod" class="btn btn-warning" asp-controller="TaskStatus" asp-route-id="@Model.Id" asp-route-redirectTo="Home">Due</a>
                     }
