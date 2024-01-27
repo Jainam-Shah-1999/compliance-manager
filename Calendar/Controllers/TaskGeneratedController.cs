@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calendar.Models;
 using Calendar.Models.Enums;
@@ -22,7 +17,7 @@ namespace Calendar.Controllers
             holidays = new List<DateTime>();
         }
 
-        // GET: TaskGenerateds
+        // GET: TaskGenerated
         public async Task<IActionResult> Index()
         {
             var taskWithAllData = from taskGenerated in _context.TaskGenerated
@@ -32,18 +27,19 @@ namespace Calendar.Controllers
                                   select new TaskWithStatus
                                   {
                                       Name = resultjoinresult.Name,
-                                      TaskDescription = resultjoinresult.TaskDescription,
+                                      TaskDescription = resultjoinresult.TaskDescription ?? string.Empty,
                                       StartDate = taskGenerated.StartDate,
                                       EndDate = taskGenerated.EndDate,
                                       OriginalTaskId = taskGenerated.OriginalTaskId,
                                       GeneratedTaskId = taskGenerated.Id,
                                   };
+            var result = taskWithAllData.OrderBy(x => x.EndDate).ThenBy(x => x.OriginalTaskId);
             return _context.TaskGenerated != null ?
-                        View(await taskWithAllData.ToListAsync()) :
+                        View(await result.ToListAsync()) :
                         Problem("Entity set 'CalendarDbContext.TaskGenerated'  is null.");
         }
 
-        // GET: TaskGenerateds/Details/5
+        // GET: TaskGenerated/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.TaskGenerated == null)
@@ -61,7 +57,7 @@ namespace Calendar.Controllers
             return View(taskGenerated);
         }
 
-        // GET: TaskGenerateds/Create
+        // GET: TaskGenerated/Create
         public async Task<IActionResult> Create()
         {
             var generatedTasks = CreateGeneratedTask();
@@ -72,158 +68,59 @@ namespace Calendar.Controllers
                                   select new TaskWithStatus
                                   {
                                       Name = resultjoinresult.Name,
-                                      TaskDescription = resultjoinresult.TaskDescription,
+                                      TaskDescription = resultjoinresult.TaskDescription ?? string.Empty,
                                       StartDate = taskGenerated.StartDate,
                                       EndDate = taskGenerated.EndDate,
                                       OriginalTaskId = taskGenerated.OriginalTaskId,
                                       GeneratedTaskId = taskGenerated.Id,
                                   };
-            
+
             return await Task.FromResult<IActionResult>(View(taskWithAllData));
         }
 
-        // POST: TaskGenerateds/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // POST: TaskGenerated/Create
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OriginalTaskId,StartDate,EndDate")] TaskGenerated taskGenerated)
         {
             var currentDate = DateTime.Now.Date;
-            var tasksToBeRemoved = _context.TaskGenerated.Where(x => x.StartDate >= currentDate);
-            var taskStats = _context.TaskStatus.Where(x => tasksToBeRemoved.Select(y => y.Id).Contains(x.GeneratedTaskId));
-            if (taskStats.Any())
-            {
+            var tasksToBeRemoved = from generatedTask in _context.TaskGenerated
+                                   join inactiveTask in _context.Tasks
+                                   on generatedTask.OriginalTaskId equals inactiveTask.Id
+                                   where generatedTask.StartDate >= DateTime.Now.Date
+                                   select generatedTask;
 
-            }
-            else
-            {
-                _context.TaskGenerated.RemoveRange(tasksToBeRemoved);
-            }
-            var generatedTasks = CreateGeneratedTask();
+            var taskStatusToBeRemoved = from taskStatus in _context.TaskStatus
+                                        join generatedTask in tasksToBeRemoved on taskStatus.GeneratedTaskId equals generatedTask.Id
+                                        select taskStatus;
+
+            _context.TaskGenerated.RemoveRange(tasksToBeRemoved);
+            _context.TaskStatus.RemoveRange(taskStatusToBeRemoved);
+
+            var generatedTasks = CreateGeneratedTask(tasksToBeRemoved.Any());
             _context.AddRange(generatedTasks);
             await _context.SaveChangesAsync();
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(taskGenerated);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: TaskGenerateds/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public List<TaskGenerated> CreateGeneratedTask(bool regenerateTask = false)
         {
-            if (id == null || _context.TaskGenerated == null)
-            {
-                return NotFound();
-            }
-
-            var taskGenerated = await _context.TaskGenerated.FindAsync(id);
-            if (taskGenerated == null)
-            {
-                return NotFound();
-            }
-            return View(taskGenerated);
-        }
-
-        // POST: TaskGenerateds/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,StartDate,EndDate")] TaskGenerated taskGenerated)
-        {
-            if (id != taskGenerated.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(taskGenerated);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskGeneratedExists(taskGenerated.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(taskGenerated);
-        }
-
-        // GET: TaskGenerateds/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.TaskGenerated == null)
-            {
-                return NotFound();
-            }
-
-            var taskGenerated = await _context.TaskGenerated
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (taskGenerated == null)
-            {
-                return NotFound();
-            }
-
-            return View(taskGenerated);
-        }
-
-        // POST: TaskGenerateds/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.TaskGenerated == null)
-            {
-                return Problem("Entity set 'CalendarDbContext.TaskGenerated'  is null.");
-            }
-            var taskGenerated = await _context.TaskGenerated.FindAsync(id);
-            if (taskGenerated != null)
-            {
-                _context.TaskGenerated.Remove(taskGenerated);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> GeneratedIndex()
-        {
-            return _context.TaskGenerated != null ?
-                        View(await _context.TaskGenerated.ToListAsync()) :
-                        Problem("Entity set 'CalendarDbContext.TaskGenerated'  is null.");
-        }
-
-        public List<TaskGenerated> CreateGeneratedTask()
-        {
-            var tasks = _context.Tasks;
+            var tasks = _context.Tasks.Where(x => !x.Inactive);
             holidays.AddRange(_context.Holidays.Where(date => date.HolidayDate.Year == DateTime.Now.Year).Select(x => x.HolidayDate));
             var tasksGenerated = new List<TaskGenerated>();
             foreach (var task in tasks)
             {
-                tasksGenerated.AddRange(GenerateRecurringTasks(task));
+                tasksGenerated.AddRange(GenerateRecurringTasks(task, regenerateTask));
             }
 
             //return Task.FromResult<IActionResult>(View(tasksGenerated));
             return tasksGenerated;
         }
 
-        private IEnumerable<TaskGenerated> GenerateRecurringTasks(Tasks task)
+        private IEnumerable<TaskGenerated> GenerateRecurringTasks(Tasks task, bool regenerateTask)
         {
-            DateTime currentDate = task.StartDate;
+            DateTime currentDate = regenerateTask && task.StartDate < DateTime.Now.Date ? DateTime.Now.Date : task.StartDate;
             while (IsHoliday(currentDate))
             {
                 currentDate = currentDate.AddDays(1);
@@ -304,11 +201,6 @@ namespace Calendar.Controllers
         private bool IsHoliday(DateTime currentDate)
         {
             return holidays.Contains(currentDate.Date);
-        }
-
-        private bool TaskGeneratedExists(int id)
-        {
-            return (_context.TaskGenerated?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

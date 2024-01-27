@@ -29,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.ContactNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PendingTasks)
+                @Html.DisplayNameFor(model => model.PastDue)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CompletedTasks)
@@ -50,7 +50,7 @@
                     @Html.DisplayFor(modelItem => item.ContactNumber)
                 </td>
                 <td>
-                    <a class="text-danger" asp-action="UserTaskStatus" asp-route-userId="@item.Id" asp-route-status="Pending">@Html.DisplayFor(modelItem => item.PendingTasks)</a>
+                    <a class="text-danger" asp-action="UserTaskStatus" asp-route-userId="@item.Id" asp-route-status="Pending">@Html.DisplayFor(modelItem => item.PastDue)</a>
                 </td>
                 <td>
                     <a class="text-success" asp-action="UserTaskStatus" asp-route-userId="@item.Id" asp-route-status="Completed">@Html.DisplayFor(modelItem => item.CompletedTasks)</a>

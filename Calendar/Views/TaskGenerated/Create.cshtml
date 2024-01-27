@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h4>Preview of recurring tasks</h4>
+<h4>Preview of recurring tasks that'll be created</h4>
 
 <p>
     <form asp-controller="TaskGenerated" asp-action="Create">
@@ -14,12 +14,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.GeneratedTaskId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OriginalTaskId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -39,12 +33,6 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GeneratedTaskId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OriginalTaskId)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>

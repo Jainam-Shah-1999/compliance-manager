@@ -131,6 +131,10 @@ namespace Calendar.Controllers
                 await _context.SaveChangesAsync();
                 UpdateFilteredDataInSession(taskStatus, taskStatus.GeneratedTaskId, "FilteredDueTask");
                 UpdateFilteredDataInSession(taskStatus, taskStatus.GeneratedTaskId, "FilteredTaskStatus");
+                if (taskStatus.FormSubmittedFrom == "Pending" || taskStatus.FormSubmittedFrom == "Completed")
+                {
+                    return RedirectToAction("UserTaskStatus", "Dashboard", new { userId = taskStatus.UserId, status = taskStatus.FormSubmittedFrom });
+                }
                 return RedirectToAction(nameof(Index), "Home");
             }
             return RedirectToAction(nameof(Index), "Home");

@@ -15,6 +15,10 @@ else
 {
     <h3>List of Penalties</h3>
 }
+<div class="form-group col-2">
+    <label for="taskNameFilter" class="control-label" data-toggle="tooltip" title="Search in this page">Find</label>
+    <input type="text" class="form-control" id="taskNameFilter">
+</div>
 
 <table class="table">
     <thead>
@@ -115,8 +119,8 @@ else
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
+            <tr class="taskRow">
+                <td class="taskName">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
@@ -215,3 +219,25 @@ else
         }
     </tbody>
 </table>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#taskNameFilter').on('input', function () {
+                var filterValue = $(this).val().toLowerCase();
+
+                $('.taskRow').each(function () {
+                    var taskNameCell = $(this).find('.taskName');
+                    var taskName = taskNameCell.text().toLowerCase();
+
+                    if (taskName.includes(filterValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

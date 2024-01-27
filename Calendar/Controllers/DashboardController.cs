@@ -28,7 +28,7 @@ namespace Calendar.Controllers
                                                    CompanyName = user.CompanyName,
                                                    RepresentativeName = user.RepresentativeName,
                                                    ContactNumber = user.ContactNumber,
-                                                   PendingTasks = (from tg in _context.TaskGenerated.Where(tg => tg.EndDate.Date < DateTime.Today.Date)
+                                                   PastDue = (from tg in _context.TaskGenerated.Where(tg => tg.EndDate.Date < DateTime.Today.Date)
                                                                    join ts in taskStatusQuery on tg.Id equals ts.GeneratedTaskId into newjoin
                                                                    from newjoinresult in newjoin.DefaultIfEmpty()
                                                                    select new TaskWithStatus

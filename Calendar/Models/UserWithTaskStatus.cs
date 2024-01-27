@@ -16,8 +16,8 @@ namespace Calendar.Models
         [DisplayName("Contact number")]
         public double ContactNumber { get; set; }
 
-        [DisplayName("Pending tasks")]
-        public int PendingTasks { get; set; }
+        [DisplayName("Past due tasks")]
+        public int PastDue { get; set; }
 
         [DisplayName("Completed tasks")]
         public int CompletedTasks { get; set; }
