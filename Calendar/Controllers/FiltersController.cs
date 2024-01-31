@@ -25,14 +25,14 @@ namespace Calendar.Controllers
 
             if (filter.RedirectTo == "Home")
             {
-                var taskGeneratedWithTaskStatus = GetTaskGeneratedWithTaskStatus(_userId, userType, filter);
+                var taskGeneratedWithTaskStatus = GetTaskGeneratedWithTaskStatus(_userId, filter);
                 HttpContext.Session.SetObject("FilteredDueTask",
                     GetFinalTaskStatusData(taskGeneratedWithTaskStatus, filter).Where(x => TaskStatusHelper.AnyPendingStatus(x)));
                 return RedirectToAction(nameof(Index), filter.RedirectTo);
             }
             else if (filter.RedirectTo == "TaskStatus")
             {
-                var taskGeneratedWithTaskStatus = GetTaskStatusWithTaskGenerated(_userId, userType, filter);
+                var taskGeneratedWithTaskStatus = GetTaskStatusWithTaskGenerated(_userId, filter);
                 HttpContext.Session.SetObject("FilteredTaskStatus",
                     GetFinalTaskStatusDataForTaskStatusList(taskGeneratedWithTaskStatus, filter));
                 return RedirectToAction(nameof(Index), filter.RedirectTo);
@@ -41,13 +41,14 @@ namespace Calendar.Controllers
             return RedirectToAction(nameof(Index), "Home");
         }
 
-        private IQueryable<TaskWithStatus>? GetTaskGeneratedWithTaskStatus(int userId, UserTypeEnum userType, Filter filter)
+        private IQueryable<TaskWithStatus>? GetTaskGeneratedWithTaskStatus(int userId, Filter filter)
         {
             var taskGeneratedWithTaskStatus = from taskGenerated in _context.TaskGenerated
                                               .Where(x => (filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue) &&
                                               ((x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate) ||
                                               (x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate)))
-                                              join taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == userId) on taskGenerated.Id equals taskStatus.GeneratedTaskId
+                                              join taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == userId)
+                                              on taskGenerated.Id equals taskStatus.GeneratedTaskId
                                               into joinedTaskStatus
                                               from taskStatusResult in joinedTaskStatus.DefaultIfEmpty()
                                               select new TaskWithStatus
@@ -69,10 +70,14 @@ namespace Calendar.Controllers
             return taskGeneratedWithTaskStatus;
         }
 
-        private IQueryable<TaskWithStatus>? GetTaskStatusWithTaskGenerated(int userId, UserTypeEnum userType, Filter filter)
+        private IQueryable<TaskWithStatus>? GetTaskStatusWithTaskGenerated(int userId, Filter filter)
         {
             var taskGeneratedWithTaskStatus = from taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == userId)
-                                              join taskGenerated in _context.TaskGenerated on taskStatus.GeneratedTaskId equals taskGenerated.Id
+                                              join taskGenerated in _context.TaskGenerated
+                                              .Where(x => (filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue) &&
+                                              ((x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate) ||
+                                              (x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate)))
+                                              on taskStatus.GeneratedTaskId equals taskGenerated.Id
                                               into joinedTaskStatus
                                               from taskStatusResult in joinedTaskStatus.DefaultIfEmpty()
                                               select new TaskWithStatus
@@ -97,7 +102,9 @@ namespace Calendar.Controllers
         private IOrderedEnumerable<TaskWithStatus> GetFinalTaskStatusData(IQueryable<TaskWithStatus>? taskGeneratedWithTaskStatus, Filter filter)
         {
             var taskWithAllData = (from result in taskGeneratedWithTaskStatus
-                                   join tasks in _context.Tasks.Where(x => x.Name.Contains(filter.TaskName)) on result.OriginalTaskId equals tasks.Id
+                                   join tasks in _context.Tasks
+                                   .Where(x => string.IsNullOrEmpty(filter.TaskName) || (!string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName)))
+                                   on result.OriginalTaskId equals tasks.Id
                                    into joinTaskStatus
                                    from taskResult in joinTaskStatus.DefaultIfEmpty()
                                    select new TaskWithStatus
@@ -122,7 +129,9 @@ namespace Calendar.Controllers
         private IEnumerable<TaskWithStatus> GetFinalTaskStatusDataForTaskStatusList(IQueryable<TaskWithStatus>? taskGeneratedWithTaskStatus, Filter filter)
         {
             var taskWithAllData = from result in taskGeneratedWithTaskStatus
-                                  join tasks in _context.Tasks.Where(x => x.Name.Contains(filter.TaskName)) on result.OriginalTaskId equals tasks.Id
+                                  join tasks in _context.Tasks
+                                  .Where(x => string.IsNullOrEmpty(filter.TaskName) || (!string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName)))
+                                  on result.OriginalTaskId equals tasks.Id
                                   into resultjoin
                                   from resultjoinresult in resultjoin.DefaultIfEmpty()
                                   select new TaskWithStatus
