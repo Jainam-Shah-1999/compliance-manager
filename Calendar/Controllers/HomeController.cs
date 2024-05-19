@@ -7,6 +7,11 @@ using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Calendar.HelperMethods;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Calendar.Migrations;
+using NuGet.Protocol.Plugins;
 
 namespace Calendar.Controllers
 {
@@ -94,7 +99,7 @@ namespace Calendar.Controllers
                             && TaskStatusHelper.AnyPendingStatus(x)).ToList();
             taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
 
-            var weekEnd = DateTime.Today.AddDays(6 - ((double)DateTime.Today.DayOfWeek) + 1);
+            var weekEnd = DateTime.Today.AddDays(6);
             var dueThisWeek = taskWithAllData
                     .Where(x =>
                             !taskIds.Contains(x.GeneratedTaskId) &&
@@ -153,8 +158,9 @@ namespace Calendar.Controllers
                 {
                     user = _context.Users.Where(user => user.Username == userName && user.Password == password).ToList().Single();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.Log(LogLevel.Error, ex.Message);
                     user = null;
                     ViewData["ErrorMessage"] = "The username or password is incorrect, try again.";
                     return View();
@@ -170,27 +176,37 @@ namespace Calendar.Controllers
                 {
                     UserTypeEnum userRole = user.UserType;
 
-                    // Create claims for the user
-                    var claims = new List<Claim>
-                {
-                    new(ClaimTypes.SerialNumber, user.Id.ToString()),
-                    new(ClaimTypes.Name, user.CompanyName),
-                    new(ClaimTypes.GivenName, user.RepresentativeName),
-                    new(ClaimTypes.Email, user.Email),
-                    new(ClaimTypes.MobilePhone, user.ContactNumber.ToString()),
-                    new(ClaimTypes.PrimarySid, user.Username),
-                    new(ClaimTypes.Sid, user.Password),
-                    new(ClaimTypes.Role, userRole.ToString()), // Add user role as a claim
-                };
+                    //    // Create claims for the user
+                    //    var claims = new List<Claim>
+                    //{
+                    //    new(ClaimTypes.SerialNumber, user.Id.ToString()),
+                    //    new(ClaimTypes.Name, user.CompanyName),
+                    //    new(ClaimTypes.GivenName, user.RepresentativeName),
+                    //    new(ClaimTypes.Email, user.Email),
+                    //    new(ClaimTypes.MobilePhone, user.ContactNumber.ToString()),
+                    //    new(ClaimTypes.PrimarySid, user.Username),
+                    //    new(ClaimTypes.Sid, user.Password),
+                    //    new(ClaimTypes.Role, userRole.ToString()), // Add user role as a claim
+                    //};
 
-                    // Create ClaimsIdentity
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    //    // Create ClaimsIdentity
+                    //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    // Create ClaimsPrincipal
-                    var principal = new ClaimsPrincipal(identity);
+                    //    // Create ClaimsPrincipal
+                    //    var principal = new ClaimsPrincipal(identity);
 
-                    // Sign in the user
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                    //    // Sign in the user
+                    //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true, AllowRefresh = true });
+
+                    var token = GenerateJwtToken(user);
+                    Response.Headers.Add("Authorization", "Bearer " + token);
+                    // Set the token as a cookie
+                    Response.Cookies.Append("AuthToken", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true, // Set to true if using HTTPS
+                        SameSite = SameSiteMode.Strict
+                    });
 
                     if (userRole == UserTypeEnum.Client)
                     {
@@ -205,6 +221,36 @@ namespace Calendar.Controllers
             ViewData["ErrorMessage"] = "An error occurred while logging you in, please try again.";
 
             return View();
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            UserTypeEnum userRole = user.UserType;
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.SerialNumber, user.Id.ToString()),
+                new(ClaimTypes.Name, user.CompanyName),
+                new(ClaimTypes.GivenName, user.RepresentativeName),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.MobilePhone, user.ContactNumber.ToString()),
+                new(ClaimTypes.PrimarySid, user.Username),
+                new(ClaimTypes.Sid, user.Password),
+                new(ClaimTypes.Role, userRole.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("YourVeryLongSecureSecretKeyHere1234567890"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "JainamShah",
+                audience: "KPAFinAdvisors",
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         [HttpPost]
