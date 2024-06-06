@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComplianceCalendar", "ComplianceCalendar\ComplianceCalendar.csproj", "{8511AD47-C292-4F20-A6EA-38A8D314C10C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KpaFinAdvisors.ComplianceCalendar", "KpaFinAdvisors.ComplianceCalendar\KpaFinAdvisors.ComplianceCalendar.csproj", "{8511AD47-C292-4F20-A6EA-38A8D314C10C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KpaFinAdvisors.Common", "KpaFinAdvisors.Common\KpaFinAdvisors.Common.csproj", "{3D945CC4-8727-43F6-85E2-74392540C0BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KpaFinAdvisors.Blogs", "KpaFinAdvisors.Blogs\KpaFinAdvisors.Blogs.csproj", "{7D8B168D-A93A-49F9-92C6-6711D61B2C67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KpaFinAdvisors.Admin", "KpaFinAdvisors.Admin\KpaFinAdvisors.Admin.csproj", "{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{8511AD47-C292-4F20-A6EA-38A8D314C10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8511AD47-C292-4F20-A6EA-38A8D314C10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8511AD47-C292-4F20-A6EA-38A8D314C10C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D945CC4-8727-43F6-85E2-74392540C0BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D945CC4-8727-43F6-85E2-74392540C0BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D945CC4-8727-43F6-85E2-74392540C0BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D945CC4-8727-43F6-85E2-74392540C0BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D8B168D-A93A-49F9-92C6-6711D61B2C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D8B168D-A93A-49F9-92C6-6711D61B2C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D8B168D-A93A-49F9-92C6-6711D61B2C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D8B168D-A93A-49F9-92C6-6711D61B2C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
