@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
 
-namespace KpaFinAdvisors.ComplianceCalendar
+namespace KpaFinAdvisors.Common.DatabaseContext
 {
-    public class CalendarDbContext : DbContext
+    public class KpaFinAdvisorsDbContext : DbContext
     {
-        public CalendarDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
+        public KpaFinAdvisorsDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
 
         public DbSet<Tasks> Tasks { get; set; }
 

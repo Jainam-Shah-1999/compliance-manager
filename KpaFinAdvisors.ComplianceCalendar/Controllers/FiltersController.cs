@@ -1,6 +1,6 @@
 ﻿using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -9,9 +9,9 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     public class FiltersController : Controller
     {
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
-        public FiltersController(CalendarDbContext context)
+        public FiltersController(KpaFinAdvisorsDbContext context)
         {
             _context = context;
         }

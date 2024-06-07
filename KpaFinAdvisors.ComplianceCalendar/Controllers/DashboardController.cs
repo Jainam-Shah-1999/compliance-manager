@@ -1,6 +1,6 @@
 ﻿using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +10,9 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
-        public DashboardController(CalendarDbContext context)
+        public DashboardController(KpaFinAdvisorsDbContext context)
         {
             _context = context;
         }

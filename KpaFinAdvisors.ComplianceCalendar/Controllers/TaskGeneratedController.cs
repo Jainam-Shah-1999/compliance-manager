@@ -2,16 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
+using KpaFinAdvisors.Common.DatabaseContext;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     public class TaskGeneratedController : Controller
     {
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
         private List<DateTime> holidays;
 
-        public TaskGeneratedController(CalendarDbContext context)
+        public TaskGeneratedController(KpaFinAdvisorsDbContext context)
         {
             _context = context;
             holidays = new List<DateTime>();

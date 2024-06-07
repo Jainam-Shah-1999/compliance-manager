@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using KpaFinAdvisors.Common.Enums;
-using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.Common.Models;
 using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
 using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
@@ -13,9 +13,9 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
     [Authorize]
     public class TaskStatusController : Controller
     {
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
-        public TaskStatusController(CalendarDbContext context)
+        public TaskStatusController(KpaFinAdvisorsDbContext context)
         {
             _context = context;
         }

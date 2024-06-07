@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.Common.Models;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
@@ -9,9 +9,9 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
-        public UsersController(CalendarDbContext context)
+        public UsersController(KpaFinAdvisorsDbContext context)
         {
             _context = context;
         }

@@ -1,4 +1,4 @@
-using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.DatabaseContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,7 +26,7 @@ builder.Services.AddMvc();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
-builder.Services.AddDbContext<CalendarDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
+builder.Services.AddDbContext<KpaFinAdvisorsDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
 var key = Encoding.ASCII.GetBytes("YourVeryLongSecureSecretKeyHere1234567890");
 builder.Services.AddAuthentication(options =>
 {

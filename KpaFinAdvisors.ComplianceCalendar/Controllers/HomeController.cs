@@ -10,6 +10,7 @@ using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
 using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using KpaFinAdvisors.ComplianceCalendar.Models;
+using KpaFinAdvisors.Common.DatabaseContext;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
@@ -17,9 +18,9 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly CalendarDbContext _context;
+        private readonly KpaFinAdvisorsDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, CalendarDbContext context)
+        public HomeController(ILogger<HomeController> logger, KpaFinAdvisorsDbContext context)
         {
             _logger = logger;
             _context = context;
