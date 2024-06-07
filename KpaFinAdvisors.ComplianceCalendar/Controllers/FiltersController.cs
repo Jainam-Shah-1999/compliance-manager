@@ -18,7 +18,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 
         // POST: FiltersController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Filter(Filter filter)
         {
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);

@@ -6,6 +6,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load base configuration
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Load environment-specific configuration based on build configuration
+#if DEBUG
+builder.Configuration
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+#else
+builder.Configuration
+    .AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true);
+#endif
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();

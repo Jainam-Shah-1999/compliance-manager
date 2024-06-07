@@ -123,7 +123,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int generatedId, int originalId, [Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,BSEDelayDays,NSEStatus,NSEDelayDays,MCXStatus,MCXDelayDays,NCDEXStatus,NCDEXDelayDays,CDSLStatus,CDSLDelayDays,NSDLStatus,NSDLDelayDays,UserId,FormSubmittedFrom")] TaskStatus taskStatus)
         {
             if (ModelState.IsValid && !IsPendingStatus(taskStatus))
@@ -184,7 +183,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,OriginalTaskId,GeneratedTaskId,BSEStatus,BSEDelayDays,NSEStatus,NSEDelayDays,MCXStatus,MCXDelayDays,NCDEXStatus,NCDEXDelayDays,CDSLStatus,CDSLDelayDays,NSDLStatus,NSDLDelayDays,UserId,FormSubmittedFrom")] TaskStatus taskStatus)
         {
             if (id != taskStatus.Id)
@@ -247,7 +245,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 
         // POST: TaskStatus/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.TaskStatus == null)

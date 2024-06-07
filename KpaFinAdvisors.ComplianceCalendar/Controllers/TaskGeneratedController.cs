@@ -81,7 +81,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // POST: TaskGenerated/Create
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OriginalTaskId,StartDate,EndDate")] TaskGenerated taskGenerated)
         {
             var currentDate = DateTime.Now.Date;

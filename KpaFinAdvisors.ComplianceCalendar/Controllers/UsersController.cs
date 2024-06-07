@@ -52,7 +52,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType,Inactive")] User user)
         {
             if (ModelState.IsValid)
@@ -84,7 +83,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,RepresentativeName,Email,ContactNumber,Username,Password,UserType,Inactive")] User user)
         {
             if (id != user.Id)
@@ -135,7 +133,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Users == null)

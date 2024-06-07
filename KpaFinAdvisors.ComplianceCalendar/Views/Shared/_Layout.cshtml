@@ -81,7 +81,6 @@
                         {
                             <li class="nav-item" style="margin-left: auto">
                                 <form id="logoutForm" asp-controller="Home" asp-action="Logout" method="post">
-                                    @Html.AntiForgeryToken()
                                     <label>Welcome, @User.Claims.First(x => x.Type == ClaimTypes.PrimarySid).Value from @User.Claims.First(x => x.Type == ClaimTypes.Name).Value</label>
                                     <button type="submit" class="nav-link text-dark bi bi-box-arrow-in-right button-like-link" asp-area="" asp-controller="Home" asp-action="Logout">&nbsp; Logout</button>
                                 </form>

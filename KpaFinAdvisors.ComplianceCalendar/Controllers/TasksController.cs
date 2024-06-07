@@ -52,7 +52,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,TaskDescription,RecurrenceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsNSE,DelaySubmissionNSE,NonSubmissionNSE,IsBSE,DelaySubmissionBSE,NonSubmissionBSE,IsMCX,DelaySubmissionMCX,NonSubmissionMCX,IsNCDEX,DelaySubmissionNCDEX,NonSubmissionNCDEX,IsCDSL,DelaySubmissionCDSL,NonSubmissionCDSL,IsNSDL,DelaySubmissionNSDL,NonSubmissionNSDL,Inactive,InactiveDate")] Tasks task)
         {
             if (ModelState.IsValid)
@@ -84,7 +83,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TaskDescription,RecurrenceFrequency,DueDays,BusinessDays,DueCompletion,StartDate,IsNSE,DelaySubmissionNSE,NonSubmissionNSE,IsBSE,DelaySubmissionBSE,NonSubmissionBSE,IsMCX,DelaySubmissionMCX,NonSubmissionMCX,IsNCDEX,DelaySubmissionNCDEX,NonSubmissionNCDEX,IsCDSL,DelaySubmissionCDSL,NonSubmissionCDSL,IsNSDL,DelaySubmissionNSDL,NonSubmissionNSDL,Inactive,InactiveDate")] Tasks task)
         {
             if (id != task.Id)
@@ -135,7 +133,6 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 
         // POST: Tasks/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Tasks == null)
