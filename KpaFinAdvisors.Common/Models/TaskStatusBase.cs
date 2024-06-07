@@ -1,7 +1,7 @@
-﻿using Calendar.Models.Enums;
+﻿using KpaFinAdvisors.Common.Enums;
 using System.ComponentModel;
 
-namespace Calendar.Models
+namespace KpaFinAdvisors.Common.Models
 {
     public class TaskStatusBase
     {

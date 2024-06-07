@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using KpaFinAdvisors.Common.Models;
+using Microsoft.EntityFrameworkCore;
+using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
 
-namespace Calendar.Models
+namespace KpaFinAdvisors.ComplianceCalendar
 {
     public class CalendarDbContext : DbContext
     {

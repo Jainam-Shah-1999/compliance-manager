@@ -1,19 +1,17 @@
-﻿using Calendar.Models;
-using Calendar.Models.Enums;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Calendar.HelperMethods;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Calendar.Migrations;
-using NuGet.Protocol.Plugins;
+using KpaFinAdvisors.Common.Enums;
+using KpaFinAdvisors.Common.Models;
+using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
+using KpaFinAdvisors.ComplianceCalendar.Models;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     public class HomeController : Controller
     {
@@ -74,7 +72,7 @@ namespace Calendar.Controllers
                                    select new TaskWithStatus
                                    {
                                        Name = resultjoinresult.Name,
-                                       TaskDescription = resultjoinresult.TaskDescription ?? String.Empty,
+                                       TaskDescription = resultjoinresult.TaskDescription ?? string.Empty,
                                        StartDate = result.StartDate,
                                        EndDate = result.EndDate,
                                        OriginalTaskId = result.OriginalTaskId,
@@ -95,7 +93,7 @@ namespace Calendar.Controllers
 
             var dueToday = taskWithAllData
                     .Where(x => !taskIds.Contains(x.GeneratedTaskId) &&
-                            (x.StartDate.Date == DateTime.Today.Date || (x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date))
+                            (x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date)
                             && TaskStatusHelper.AnyPendingStatus(x)).ToList();
             taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Calendar.Models
+namespace KpaFinAdvisors.Common.Models
 {
     public class Holidays
     {

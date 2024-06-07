@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Calendar.Models.Enums
+namespace KpaFinAdvisors.Common.Enums
 {
     public enum TaskStatusEnum
     {

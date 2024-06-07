@@ -1,10 +1,11 @@
-﻿using Calendar.HelperMethods;
-using Calendar.Models;
-using Calendar.Models.Enums;
+﻿using KpaFinAdvisors.Common.Enums;
+using KpaFinAdvisors.Common.Models;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     [Authorize]
     public class DashboardController : Controller
@@ -29,17 +30,17 @@ namespace Calendar.Controllers
                                                    RepresentativeName = user.RepresentativeName,
                                                    ContactNumber = user.ContactNumber,
                                                    PastDue = (from tg in _context.TaskGenerated.Where(tg => tg.EndDate.Date < DateTime.Today.Date)
-                                                                   join ts in taskStatusQuery on tg.Id equals ts.GeneratedTaskId into newjoin
-                                                                   from newjoinresult in newjoin.DefaultIfEmpty()
-                                                                   select new TaskWithStatus
-                                                                   {
-                                                                       BSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.BSEStatus,
-                                                                       NSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSEStatus,
-                                                                       MCXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.MCXStatus,
-                                                                       NCDEXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NCDEXStatus,
-                                                                       CDSLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.CDSLStatus,
-                                                                       NSDLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSDLStatus
-                                                                   }).AsEnumerable()
+                                                              join ts in taskStatusQuery on tg.Id equals ts.GeneratedTaskId into newjoin
+                                                              from newjoinresult in newjoin.DefaultIfEmpty()
+                                                              select new TaskWithStatus
+                                                              {
+                                                                  BSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.BSEStatus,
+                                                                  NSEStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSEStatus,
+                                                                  MCXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.MCXStatus,
+                                                                  NCDEXStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NCDEXStatus,
+                                                                  CDSLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.CDSLStatus,
+                                                                  NSDLStatus = newjoinresult == null ? TaskStatusEnum.Pending : newjoinresult.NSDLStatus
+                                                              }).AsEnumerable()
                                                                        .Where(x => x.CDSLStatus == TaskStatusEnum.Pending ||
                                                                        x.NSDLStatus == TaskStatusEnum.Pending ||
                                                                        x.BSEStatus == TaskStatusEnum.Pending ||

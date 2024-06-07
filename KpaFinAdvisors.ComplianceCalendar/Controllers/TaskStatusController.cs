@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Calendar.Models;
 using Microsoft.AspNetCore.Authorization;
-using TaskStatus = Calendar.Models.TaskStatus;
-using Calendar.Models.Enums;
 using System.Security.Claims;
-using Calendar.HelperMethods;
+using KpaFinAdvisors.Common.Enums;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.Models;
+using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
+using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     [Authorize]
     public class TaskStatusController : Controller

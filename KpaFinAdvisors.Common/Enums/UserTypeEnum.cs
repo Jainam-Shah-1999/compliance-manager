@@ -1,4 +1,4 @@
-﻿namespace Calendar.Models.Enums
+﻿namespace KpaFinAdvisors.Common.Enums
 {
     public enum UserTypeEnum
     {

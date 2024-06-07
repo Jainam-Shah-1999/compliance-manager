@@ -1,4 +1,4 @@
-namespace Calendar.Models
+namespace KpaFinAdvisors.ComplianceCalendar.Models
 {
     public class ErrorViewModel
     {

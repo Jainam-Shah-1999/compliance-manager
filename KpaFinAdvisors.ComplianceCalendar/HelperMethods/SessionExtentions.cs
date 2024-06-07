@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Calendar.HelperMethods
+namespace KpaFinAdvisors.ComplianceCalendar.HelperMethods
 {
     public static class SessionExtensions
     {

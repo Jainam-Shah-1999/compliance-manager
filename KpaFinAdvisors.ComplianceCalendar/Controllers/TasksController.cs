@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Calendar.Models;
 using Microsoft.AspNetCore.Authorization;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.Models;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     [Authorize]
     public class TasksController : Controller
@@ -18,9 +19,9 @@ namespace Calendar.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
-              return _context.Tasks != null ? 
-                          View(await _context.Tasks.ToListAsync()) :
-                          Problem("Entity set 'CalendarDbContext.Tasks'  is null.");
+            return _context.Tasks != null ?
+                        View(await _context.Tasks.ToListAsync()) :
+                        Problem("Entity set 'CalendarDbContext.Tasks'  is null.");
         }
 
         // GET: Tasks/Details/5
@@ -146,14 +147,14 @@ namespace Calendar.Controllers
             {
                 _context.Tasks.Remove(task);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TaskExists(int id)
         {
-          return (_context.Tasks?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Tasks?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

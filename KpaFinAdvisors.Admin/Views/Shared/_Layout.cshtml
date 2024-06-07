@@ -19,11 +19,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Compliance Calendar</a>
+                            <div class="dropdown-menu">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Dashboard</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Task list</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TaskGenerated" asp-action="Index">Generate tasks</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TaskGenerated" asp-action="Index">Holidays</a>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="Index">Blogs</a>
                         </li>
                     </ul>
                 </div>

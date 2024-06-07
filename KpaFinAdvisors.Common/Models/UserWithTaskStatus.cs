@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace Calendar.Models
+namespace KpaFinAdvisors.Common.Models
 {
     public class UserWithTaskStatus
     {

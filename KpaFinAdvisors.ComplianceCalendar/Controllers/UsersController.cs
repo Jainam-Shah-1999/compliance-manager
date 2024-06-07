@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Calendar.Models;
 using Microsoft.AspNetCore.Authorization;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.Models;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     [Authorize]
     public class UsersController : Controller

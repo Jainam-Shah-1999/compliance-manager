@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Calendar.Models;
 using Microsoft.AspNetCore.Authorization;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.Common.Models;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     [Authorize]
     public class HolidaysController : Controller
@@ -18,9 +19,9 @@ namespace Calendar.Controllers
         // GET: Holidays
         public async Task<IActionResult> Index()
         {
-              return _context.Holidays != null ? 
-                          View(await _context.Holidays.ToListAsync()) :
-                          Problem("Entity set 'CalendarDbContext.Holidays'  is null.");
+            return _context.Holidays != null ?
+                        View(await _context.Holidays.ToListAsync()) :
+                        Problem("Entity set 'CalendarDbContext.Holidays'  is null.");
         }
 
         // GET: Holidays/Details/5
@@ -146,14 +147,14 @@ namespace Calendar.Controllers
             {
                 _context.Holidays.Remove(holidays);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool HolidaysExists(int id)
         {
-          return (_context.Holidays?.Any(e => e.HolidayId == id)).GetValueOrDefault();
+            return (_context.Holidays?.Any(e => e.HolidayId == id)).GetValueOrDefault();
         }
     }
 }

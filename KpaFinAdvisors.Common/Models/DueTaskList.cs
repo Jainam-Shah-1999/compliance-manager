@@ -1,4 +1,4 @@
-﻿namespace Calendar.Models
+﻿namespace KpaFinAdvisors.Common.Models
 {
     public class DueTaskList
     {

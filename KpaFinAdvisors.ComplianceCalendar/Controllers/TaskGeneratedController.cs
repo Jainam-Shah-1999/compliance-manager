@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Calendar.Models;
-using Calendar.Models.Enums;
+using KpaFinAdvisors.Common.Enums;
+using KpaFinAdvisors.Common.Models;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     public class TaskGeneratedController : Controller
     {

@@ -1,10 +1,11 @@
-﻿using Calendar.HelperMethods;
-using Calendar.Models;
-using Calendar.Models.Enums;
+﻿using KpaFinAdvisors.Common.Enums;
+using KpaFinAdvisors.Common.Models;
+using KpaFinAdvisors.ComplianceCalendar;
+using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Calendar.Controllers
+namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
     public class FiltersController : Controller
     {
@@ -44,9 +45,9 @@ namespace Calendar.Controllers
         private IQueryable<TaskWithStatus>? GetTaskGeneratedWithTaskStatus(int userId, Filter filter)
         {
             var taskGeneratedWithTaskStatus = from taskGenerated in _context.TaskGenerated
-                                              .Where(x => (filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue) &&
-                                              ((x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate) ||
-                                              (x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate)))
+                                              .Where(x => filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue &&
+                                              (x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate ||
+                                              x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate))
                                               join taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == userId)
                                               on taskGenerated.Id equals taskStatus.GeneratedTaskId
                                               into joinedTaskStatus
@@ -74,9 +75,9 @@ namespace Calendar.Controllers
         {
             var taskGeneratedWithTaskStatus = from taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == userId)
                                               join taskGenerated in _context.TaskGenerated
-                                              .Where(x => (filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue) &&
-                                              ((x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate) ||
-                                              (x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate)))
+                                              .Where(x => filter.StartDate != DateTime.MinValue && filter.EndDate != DateTime.MinValue &&
+                                              (x.StartDate >= filter.StartDate && x.StartDate <= filter.EndDate ||
+                                              x.EndDate >= filter.StartDate && x.EndDate <= filter.EndDate))
                                               on taskStatus.GeneratedTaskId equals taskGenerated.Id
                                               into joinedTaskStatus
                                               from taskStatusResult in joinedTaskStatus.DefaultIfEmpty()
@@ -103,7 +104,7 @@ namespace Calendar.Controllers
         {
             var taskWithAllData = (from result in taskGeneratedWithTaskStatus
                                    join tasks in _context.Tasks
-                                   .Where(x => string.IsNullOrEmpty(filter.TaskName) || (!string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName)))
+                                   .Where(x => string.IsNullOrEmpty(filter.TaskName) || !string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName))
                                    on result.OriginalTaskId equals tasks.Id
                                    into joinTaskStatus
                                    from taskResult in joinTaskStatus.DefaultIfEmpty()
@@ -130,7 +131,7 @@ namespace Calendar.Controllers
         {
             var taskWithAllData = from result in taskGeneratedWithTaskStatus
                                   join tasks in _context.Tasks
-                                  .Where(x => string.IsNullOrEmpty(filter.TaskName) || (!string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName)))
+                                  .Where(x => string.IsNullOrEmpty(filter.TaskName) || !string.IsNullOrEmpty(filter.TaskName) && x.Name.Contains(filter.TaskName))
                                   on result.OriginalTaskId equals tasks.Id
                                   into resultjoin
                                   from resultjoinresult in resultjoin.DefaultIfEmpty()
