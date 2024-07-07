@@ -33,7 +33,7 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         }
 
         [Authorize]
-        public IActionResult Index(string returnToHome = "false", string requestedDate = "Today")
+        public IActionResult Index(string returnToHome = "false", string requestedDate = "today")
         {
             var filteredTaskWithStatus = HttpContext.Session.GetObject<List<TaskWithStatus>>("FilteredDueTask");
             if (filteredTaskWithStatus?.Any() == true && !bool.Parse(returnToHome))
@@ -52,22 +52,22 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
             var _userId = int.Parse(User.Claims.First(claim => claim.Type == ClaimTypes.SerialNumber).Value);
 
             IQueryable<TaskGenerated> tasksGenerated;
-            switch (requestedDate)
-            {
-                case "Today":
-                    tasksGenerated = _context.TaskGenerated.Where(x => x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date);
-                    break;
-                case "Week":
-                    tasksGenerated = _context.TaskGenerated.Where(x => x.EndDate.Date <= DateTime.Today.AddDays(7));
-                    break;
-                case "PasDue":
-                    tasksGenerated = _context.TaskGenerated.Where(x => x.EndDate.Date < DateTime.Today.Date);
-                    break;
-                default:
-                    tasksGenerated = _context.TaskGenerated.Where(x => x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date);
-                    break;
-            }
-            var taskGeneratedWithTaskStatus = from taskGenerated in tasksGenerated
+            //switch (requestedDate)
+            //{
+            //    case "today":
+            //        tasksGenerated = _context.TaskGenerated.Where(x => x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date);
+            //        break;
+            //    case "week":
+            //        tasksGenerated = _context.TaskGenerated.Where(x => x.EndDate.Date <= DateTime.Today.AddDays(6).Date);
+            //        break;
+            //    case "pastDue":
+            //        tasksGenerated = _context.TaskGenerated.Where(x => x.EndDate.Date < DateTime.Today.Date);
+            //        break;
+            //    default:
+            //        tasksGenerated = _context.TaskGenerated.Where(x => x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date);
+            //        break;
+            //}
+            var taskGeneratedWithTaskStatus = from taskGenerated in _context.TaskGenerated
                                               join taskStatus in _context.TaskStatus.Where(taskStatus => taskStatus.UserId == _userId) on taskGenerated.Id equals taskStatus.GeneratedTaskId
                                               into newjoin
                                               from newjoinresult in newjoin.DefaultIfEmpty()
@@ -109,24 +109,24 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
                                        NSDLStatus = resultjoinresult.IsNSDL ? result.NSDLStatus : TaskStatusEnum.NotApplicable
                                    }).AsEnumerable().OrderBy(x => x.EndDate);
 
-            //var taskIds = new List<int>();
-            //var pastDue = taskWithAllData
-            //        .Where(x => x.EndDate.Date < DateTime.Today.Date && TaskStatusHelper.AnyPendingStatus(x)).ToList();
-            //taskIds.AddRange(pastDue.Select(x => x.GeneratedTaskId));
+            var taskIds = new List<int>();
+            var pastDue = taskWithAllData
+                    .Where(x => x.EndDate.Date < DateTime.Today.Date && TaskStatusHelper.AnyPendingStatus(x)).ToList();
+            taskIds.AddRange(pastDue.Select(x => x.GeneratedTaskId));
 
-            //var dueToday = taskWithAllData
-            //        .Where(x => !taskIds.Contains(x.GeneratedTaskId) &&
-            //                (x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date)
-            //                && TaskStatusHelper.AnyPendingStatus(x)).ToList();
-            //taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
+            var dueToday = taskWithAllData
+                    .Where(x => !taskIds.Contains(x.GeneratedTaskId) &&
+                            (x.StartDate.Date == DateTime.Today.Date || x.StartDate.Date < DateTime.Today.Date && x.EndDate.Date >= DateTime.Today.Date)
+                            && TaskStatusHelper.AnyPendingStatus(x)).ToList();
+            taskIds.AddRange(dueToday.Select(x => x.GeneratedTaskId));
 
-            //var weekEnd = DateTime.Today.AddDays(6);
-            //var dueThisWeek = taskWithAllData
-            //        .Where(x =>
-            //                !taskIds.Contains(x.GeneratedTaskId) &&
-            //                x.EndDate.Date <= weekEnd.Date &&
-            //                TaskStatusHelper.AnyPendingStatus(x)).ToList();
-            //taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
+            var weekEnd = DateTime.Today.AddDays(6);
+            var dueThisWeek = taskWithAllData
+                    .Where(x =>
+                            !taskIds.Contains(x.GeneratedTaskId) &&
+                            x.EndDate.Date <= weekEnd.Date &&
+                            TaskStatusHelper.AnyPendingStatus(x)).ToList();
+            taskIds.AddRange(dueThisWeek.Select(x => x.GeneratedTaskId));
 
             //var monthEnd = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
             //var dueThisMonth = taskWithAllData
@@ -154,9 +154,12 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 
             DueTaskList dueTaskList = new()
             {
-                DueToday = new List<TaskWithStatus>(),
-                PastDue = new List<TaskWithStatus>(),
-                DueThisWeek = taskWithAllData.Where(x => TaskStatusHelper.AnyPendingStatus(x)).ToList(),
+                DueToday = dueToday,
+                DueTodayCount = dueToday.Count(),
+                PastDue = pastDue,
+                PastDueCount = pastDue.Count(),
+                DueThisWeek = dueThisWeek,
+                DueThisWeekCount = dueThisWeek.Count(),
                 FilteredTasks = new List<TaskWithStatus>(),
             };
             return View(dueTaskList);

@@ -2,6 +2,15 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+
+<div id="loader" style="top: 50%; left: 50%; position: relative;">
+    <!-- Loader HTML/CSS -->
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="content" style="display: none">
 <div class="container-fluid">
     <div class="row">
         <div class="form-group col-2">
@@ -34,24 +43,56 @@
 }
 else
 {
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="taskTabs">
         <li class="nav-item">
-            <a class="nav-link" asp-action="Index" asp-controller="Home">Due Today
-            <span class="badge bg-secondary">@Model.DueToday?.Count()</span>
+            <a class="nav-link active" id="dueTodayTab" data-tab="today">
+                Due Today
+                <span class="badge bg-secondary">@Model.DueTodayCount</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Past Due
-            <span class="badge bg-secondary">@Model.PastDue?.Count()</span>
+            <a class="nav-link" id="pastDueTab" data-tab="pastDue">
+                Past Due
+                <span class="badge bg-secondary">@Model.PastDueCount</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" id="dueWeekTab" data-tab="week">
                 Due in a Week
-                <span class="badge bg-secondary">@Model.DueThisWeek?.Count()</span>
+                <span class="badge bg-secondary">@Model.DueThisWeekCount</span>
             </a>
         </li>
     </ul>
+
+    <div id="tabContent">
+        <section id="today" class="tab-section">
+            @{
+                ViewData["PastDue"] = "false";
+                ViewData["Height"] = "46vh";
+                ViewData["Message"] = "No tasks due today";
+                ViewData["FormSubmittedFrom"] = "StatusList";
+            }
+            @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
+        </section>
+        <section id="pastDue" class="tab-section" style="display: none;">
+            @{
+                ViewData["PastDue"] = "true";
+                ViewData["Height"] = "46vh";
+                ViewData["Message"] = "No past due tasks";
+                ViewData["FormSubmittedFrom"] = "StatusList";
+            }
+            @await Html.PartialAsync("../_TaskList", Model.PastDue, ViewData)
+        </section>
+        <section id="week" class="tab-section" style="display: none;">
+            @{
+                ViewData["PastDue"] = "false";
+                ViewData["Height"] = "46vh";
+                ViewData["Message"] = "No tasks due in a week";
+                ViewData["FormSubmittedFrom"] = "StatusList";
+            }
+            @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
+        </section>
+    </div>
     @* <h5>Past Due</h5>
     <div>
         @{
@@ -74,7 +115,7 @@ else
         @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
     </div>
     <hr />
-    <h5>Due in a Week</h5> *@
+    <h5>Due in a Week</h5>
     <div>
         @{
             ViewData["PastDue"] = "false";
@@ -83,7 +124,7 @@ else
             ViewData["FormSubmittedFrom"] = "StatusList";
         }
         @await Html.PartialAsync("../_TaskList", Model.DueThisWeek, ViewData)
-    </div>
+    </div> *@
 }
 
 
@@ -102,10 +143,36 @@ else
     @await Html.PartialAsync("../_TaskList", Model.DueThisYear)
 </div> *@
 
+</div>
+
 @section scripts {
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function () {
+            $('#loader').hide();
+            $('#content').show();
+            $('#taskTabs a').on('click', function (e) {
+                e.preventDefault();
+                var tab = $(this).data('tab');
+
+                $('#taskTabs a').removeClass('active');
+                $(this).addClass('active');
+
+                $('.tab-section').hide();
+                $('#' + tab).show();
+
+                // Fetch data from the controller
+                // $.ajax({
+                //     url: '@Url.Action("Index", "Home")', // Adjust this URL to your controller action
+                //     data: { requestedDate: tab },
+                //     success: function () {
+                //     },
+                //     error: function () {
+                //         alert("Error loading tasks");
+                //     }
+                // });
+            });
+
             $('#taskNameFilter').on('input', function () {
                 var filterValue = $(this).val().toLowerCase();
 
