@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -8,12 +7,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.ComplianceCalendar.Models;
 using KpaFinAdvisors.Common;
 using KpaFinAdvisors.Common.Helpers;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.EntityFrameworkCore;
-using Humanizer;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {

@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var sharedConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "KpaFinAdvisors.Common");
+
 builder.Configuration
-    .SetBasePath(builder.Environment.ContentRootPath)
+    .SetBasePath(sharedConfigPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 // Load environment-specific configuration based on build configuration
