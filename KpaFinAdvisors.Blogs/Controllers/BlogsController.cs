@@ -18,8 +18,13 @@ namespace KpaFinAdvisors.Blogs.Controllers
             return View();
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public IActionResult FormBlog(string editor1)
+        public IActionResult Create(string editor1)
         {
             ViewBag.Editor1 = editor1.Replace(Environment.NewLine, string.Empty);
             return View("Index");
