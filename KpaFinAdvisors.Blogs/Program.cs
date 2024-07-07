@@ -1,7 +1,30 @@
+using KpaFinAdvisors.Common;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Load environment-specific configuration based on build configuration
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Load environment-specific configuration based on build configuration
+#if DEBUG
+builder.Configuration
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+#else
+builder.Configuration
+    .AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true);
+#endif
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<KpaFinAdvisorsDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
 
 var app = builder.Build();
 

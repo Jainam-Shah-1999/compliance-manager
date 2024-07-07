@@ -30,7 +30,7 @@ builder.Services.AddMvc();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
-builder.Services.AddDbContext<KpaFinAdvisorsDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
+builder.Services.AddDbContext<KpaFinAdvisorsDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection"), b => b.MigrationsAssembly("KpaFinAdvisors.ComplianceCalendar")));
 var key = Encoding.UTF8.GetBytes("YourVeryLongSecureSecretKeyHere1234567890");
 builder.Services.AddAuthentication(options =>
 {
