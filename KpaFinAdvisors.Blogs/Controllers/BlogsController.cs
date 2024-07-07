@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using KpaFinAdvisors.Common;
 using KpaFinAdvisors.Common.Models;
+using System.Security.Claims;
 
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
+    [Authorize]
     public class BlogsController : Controller
     {
         private readonly KpaFinAdvisorsDbContext _context;
@@ -16,8 +18,16 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: Blogs
         public async Task<IActionResult> Index()
+        {
+            return _context.Blogs != null ?
+                        View(await _context.Blogs.ToListAsync()) :
+                        Problem("Entity set 'CalendarDbContext.Blogs'  is null.");
+        }
+
+        public async Task<IActionResult> List()
         {
             return _context.Blogs != null ?
                         View(await _context.Blogs.ToListAsync()) :
@@ -56,6 +66,8 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         {
             if (ModelState.IsValid)
             {
+                blog.CreatedBy = User.Claims.First(x => x.Type == ClaimTypes.GivenName).Value;
+                blog.Created = DateTime.Now;
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -94,6 +106,8 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
             {
                 try
                 {
+                    blog.UpdatedBy = User.Claims.First(x => x.Type == ClaimTypes.GivenName).Value;
+                    blog.Updated = DateTime.Now;
                     _context.Update(blog);
                     await _context.SaveChangesAsync();
                 }
@@ -108,7 +122,7 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(List));
             }
             return View(blog);
         }
@@ -146,7 +160,7 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(List));
         }
 
         private bool BlogsExists(int id)

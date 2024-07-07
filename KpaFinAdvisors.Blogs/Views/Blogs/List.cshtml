@@ -1,42 +1,55 @@
-﻿@model KpaFinAdvisors.Common.Models.Blog
+﻿@model IEnumerable<KpaFinAdvisors.Common.Models.Blog>
 @{
     ViewData["Title"] = "Create blog";
 }
-<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-<h4>Write blog</h4>
-<form asp-controller="Blogs" asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Title" class="control-label"></label>
-            <input type="text" asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="control-label"></label>
-            <textarea asp-for="Description" id="editor1"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <br />
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-    @* @Html.Raw(ViewBag.Editor1) *@
-    @* <textarea id="editor1" name="editor1"></textarea>
-    <br />
-    <button type="submit" class="btn btn-dark">Save</button> *@
-</form>
-<script>
-    // CKEDITOR.replace('editor1', {
-    //     removeButtons: 'Link,Unlink,Anchor,Image,About,Table,Source',
-    // });
-    let aa = ClassicEditor
-        .create(document.querySelector('#editor1'), {
-            toolbar: {
-                items: ["undo", "redo", "|", "heading", "|", "bold", "italic", "|", "bulletedList", "numberedList"]
-            },
-            language: 'en'
-        })
-        .catch(error => {
-            console.error(error);
-        });
-</script>
+<p>
+    <a asp-action="Create">Add blog</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="taskRow">
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                </td>
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.UpdatedBy)
+                </td>
+                <td class="taskName">
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
