@@ -30,21 +30,11 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    @if (User.IsInRole(UserTypeEnum.Client.ToString()))
-                    {
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Compliance Manager</a>
-                    }
-                    @if (User.IsInRole(UserTypeEnum.Admin.ToString()))
-                    {
-                        <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">Compliance Manager</a>
-                    }
-                }
-                else
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Login">Compliance Manager</a>
-                }
+                <a class="navbar-brand" asp-area="" asp-controller="@(User.Identity.IsAuthenticated ? "Home" : "Login")" asp-action="Index"><img src="~/images/logo_115.png" height="40px" width="100px" /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -80,9 +70,9 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item" style="margin-left: auto">
-                                <form id="logoutForm" asp-controller="Home" asp-action="Logout" method="post">
+                                <form id="logoutForm" asp-controller="Login" asp-action="Logout" method="post">
                                     <label>Welcome, @User.Claims.First(x => x.Type == ClaimTypes.PrimarySid).Value from @User.Claims.First(x => x.Type == ClaimTypes.Name).Value</label>
-                                    <button type="submit" class="nav-link text-dark bi bi-box-arrow-in-right button-like-link" asp-area="" asp-controller="Home" asp-action="Logout">&nbsp; Logout</button>
+                                    <button type="submit" class="nav-link text-dark bi bi-box-arrow-in-right button-like-link" asp-area="" asp-controller="Login" asp-action="Logout">&nbsp; Logout</button>
                                 </form>
                             </li>
 
@@ -105,8 +95,13 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - Calendar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container d-flex justify-content-between">
+            <span>
+                &copy; @DateTime.UtcNow.Year - KpaFinAdvisors - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </span>
+            <span>
+                <i class="bi bi-code"></i>  by <a href="https://jainam-shah-1999.github.io/Jainam-Shah/">Jainam Shah</a>
+            </span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -34,7 +34,25 @@
 }
 else
 {
-    <h5>Past Due</h5>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Index" asp-controller="Home">Due Today
+            <span class="badge bg-secondary">@Model.DueToday?.Count()</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Past Due
+            <span class="badge bg-secondary">@Model.PastDue?.Count()</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                Due in a Week
+                <span class="badge bg-secondary">@Model.DueThisWeek?.Count()</span>
+            </a>
+        </li>
+    </ul>
+    @* <h5>Past Due</h5>
     <div>
         @{
             ViewData["PastDue"] = "true";
@@ -56,11 +74,11 @@ else
         @await Html.PartialAsync("../_TaskList", Model.DueToday, ViewData)
     </div>
     <hr />
-    <h5>Due in a Week</h5>
+    <h5>Due in a Week</h5> *@
     <div>
         @{
             ViewData["PastDue"] = "false";
-            ViewData["Height"] = "150px";
+            ViewData["Height"] = "46vh";
             ViewData["Message"] = "No Dues";
             ViewData["FormSubmittedFrom"] = "StatusList";
         }

@@ -1,0 +1,84 @@
+﻿@using KpaFinAdvisors.Common.Enums
+@model IEnumerable<KpaFinAdvisors.Common.Models.UserWithTaskStatus>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h5>Clients</h5>
+<div class="row">
+    <label class="control-label">Find</label>
+    <div class="col-md-3">
+        <input type="text" id="userNameFilter" placeholder="Enter client name" class="form-control">
+    </div>
+</div>
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepresentativeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PastDue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedTasks)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="userRow">
+                <td class="companyName">
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td class="userName">
+                    @Html.DisplayFor(modelItem => item.RepresentativeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactNumber)
+                </td>
+                <td>
+                    <a class="text-danger" asp-action="UserTaskStatus" asp-route-userId="@item.Id" asp-route-status="Pending">@Html.DisplayFor(modelItem => item.PastDue)</a>
+                </td>
+                <td>
+                    <a class="text-success" asp-action="UserTaskStatus" asp-route-userId="@item.Id" asp-route-status="Completed">@Html.DisplayFor(modelItem => item.CompletedTasks)</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#userNameFilter').on('input', function () {
+                var filterValue = $(this).val().toLowerCase();
+
+                $('.userRow').each(function () {
+                    var userName = $(this).find('.userName').text().toLowerCase();
+                    var companyName = $(this).find('.companyName').text().toLowerCase();
+
+
+                    if (userName.includes(filterValue) || companyName.includes(filterValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

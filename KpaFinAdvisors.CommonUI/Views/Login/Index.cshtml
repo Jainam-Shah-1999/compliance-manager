@@ -1,0 +1,61 @@
+﻿<style>
+    .bg {
+        /* background-image: url('https://source.unsplash.com/1600x900/?nature'); */
+        /* background-image: url('https://images.unsplash.com/photo-1433086966358-54859d0ed716?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzNTAwMnwwfDF8c2VhcmNofDF8fG5hdHVyZXxlbnwwfHx8fDE3MTc4Nzg1ODF8MA&ixlib=rb-4.0.3&q=85'); */
+        /* background-image: url('https://images.unsplash.com/photo-1505144808419-1957a94ca61e?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzNTAwMnwwfDF8cmFuZG9tfHx8fHx8fHx8MTcxNzg4MDQ2NXw&ixlib=rb-4.0.3&q=85'); */
+        /* background-image: url('https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzNTAwMnwwfDF8cmFuZG9tfHx8fHx8fHx8MTcxNzg4MDYzOXw&ixlib=rb-4.0.3&q=85'); */
+        background-image: url('https://images.unsplash.com/photo-1505144808419-1957a94ca61e?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzNTAwMnwwfDF8cmFuZG9tfHx8fHx8fHx8MTcxNzg4MDQ2NXw&ixlib=rb-4.0.3&q=85');
+        background-size: cover;
+        height: 73vh;
+        background-repeat: no-repeat;
+    }
+
+    .login-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+    }
+</style>
+<div id="backgroundContainer" class="bg">
+    <div class="login-container">
+        <div class="card p-4">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Login</h2>
+                <h6 class="text-danger">@ViewData["ErrorMessage"]</h6>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                @* <p class="text-center mt-3">
+                <a href="#">Forgot password?</a>
+                </p> *@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const accessKey = 'c8ac06eded170381782c8f855b9bf5f12bc6020cfa83bb5415466f81b0cdeba5';
+    const backgroundContainer = document.getElementById('backgroundContainer');
+
+    async function fetchBackgroundImage() {
+        const response = await fetch(`https://api.unsplash.com/photos/random?query=nature&client_id=${accessKey}`);
+        const data = await response.json();
+        const imageUrl = data.urls.full;
+        backgroundContainer.style.backgroundImage = `url(${imageUrl})`;
+    }
+
+    fetchBackgroundImage();
+</script>

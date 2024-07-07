@@ -1,9 +1,9 @@
 ﻿using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.Common.DatabaseContext;
-using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using KpaFinAdvisors.Common;
+using KpaFinAdvisors.Common.Helpers;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {

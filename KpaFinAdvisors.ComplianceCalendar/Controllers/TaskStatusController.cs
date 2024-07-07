@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using KpaFinAdvisors.Common.Enums;
-using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.Common.Models;
 using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
-using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
+using KpaFinAdvisors.Common;
+using KpaFinAdvisors.Common.Helpers;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {

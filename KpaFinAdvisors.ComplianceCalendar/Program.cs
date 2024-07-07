@@ -1,7 +1,11 @@
-using KpaFinAdvisors.Common.DatabaseContext;
+using KpaFinAdvisors.Common;
+using KpaFinAdvisors.Common.Services;
+using KpaFinAdvisors.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +31,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddDbContext<KpaFinAdvisorsDbContext>(item => item.UseSqlServer(builder.Configuration.GetConnectionString("calendar_main_connection")));
-var key = Encoding.ASCII.GetBytes("YourVeryLongSecureSecretKeyHere1234567890");
+var key = Encoding.UTF8.GetBytes("YourVeryLongSecureSecretKeyHere1234567890");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,14 +51,29 @@ builder.Services.AddAuthentication(options =>
     };
     options.Events = new JwtBearerEvents
     {
-        OnMessageReceived = context =>
+        OnMessageReceived = async context =>
         {
-            context.Token = context.Request.Cookies["AuthToken"];
-            return Task.CompletedTask;
+            var token = context.Request.Cookies["AuthToken"];
+            if (token != null)
+            {
+                IDistributedCache cache = context.HttpContext.RequestServices.GetRequiredService<IDistributedCache>();
+                var isBlacklisted = await cache.GetStringAsync(token);
+                if (isBlacklisted != null)
+                {
+                    context.Response.StatusCode = 401; // Unauthorized
+                    context.Request.Headers.Remove("Authorization");
+                    context.Request.Cookies.Keys.Remove("AuthToken");
+                    context.Response.Headers.Remove("Authorization");
+                    context.Response.Cookies.Delete("AuthToken");
+                    return;
+                }
+            }
+            context.Token = token;
+            return;
         }
     };
 });
-
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -76,6 +95,6 @@ app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Login}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();

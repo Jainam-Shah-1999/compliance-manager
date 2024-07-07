@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+<h4>Write blog</h4>
+<form asp-controller="Blogs" asp-action="FormBlog">
+    @Html.Raw(ViewBag.Editor1)
+    <textarea id="editor1" name="editor1"></textarea>
+    <br />
+    <button type="submit" class="btn btn-dark">Save</button>
+</form>
+<script>
+    // CKEDITOR.replace('editor1', {
+    //     removeButtons: 'Link,Unlink,Anchor,Image,About,Table,Source',
+    // });
+    let aa = ClassicEditor
+        .create(document.querySelector('#editor1'), {
+            toolbar: {
+                items: ["undo", "redo", "|", "heading", "|", "bold", "italic", "|", "bulletedList", "numberedList"]
+            },
+            language: 'en'
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>

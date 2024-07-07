@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KpaFinAdvisors.CommonUI\KpaFinAdvisors.CommonUI.csproj" />
     <ProjectReference Include="..\KpaFinAdvisors.Common\KpaFinAdvisors.Common.csproj" />
   </ItemGroup>
 

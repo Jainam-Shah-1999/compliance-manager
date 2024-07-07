@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KpaFinAdvisors.Blogs", "Kpa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KpaFinAdvisors.Admin", "KpaFinAdvisors.Admin\KpaFinAdvisors.Admin.csproj", "{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KpaFinAdvisors.CommonUI", "KpaFinAdvisors.CommonUI\KpaFinAdvisors.CommonUI.csproj", "{6F8A251A-1C68-4B61-A243-505104265407}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF413CF1-30CA-44EC-9BBB-A46DF8AFD57F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F8A251A-1C68-4B61-A243-505104265407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F8A251A-1C68-4B61-A243-505104265407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F8A251A-1C68-4B61-A243-505104265407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F8A251A-1C68-4B61-A243-505104265407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,14 +1,14 @@
-﻿using KpaFinAdvisors.Admin.Models;
+﻿using KpaFinAdvisors.Blogs.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace KpaFinAdvisors.Admin.Controllers
+namespace KpaFinAdvisors.Blogs.Controllers
 {
-    public class HomeController : Controller
+    public class BlogsController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<BlogsController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public BlogsController(ILogger<BlogsController> logger)
         {
             _logger = logger;
         }
@@ -16,6 +16,13 @@ namespace KpaFinAdvisors.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult FormBlog(string editor1)
+        {
+            ViewBag.Editor1 = editor1.Replace(Environment.NewLine, string.Empty);
+            return View("Index");
         }
 
         public IActionResult Privacy()

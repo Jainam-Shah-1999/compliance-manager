@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskStatus = KpaFinAdvisors.Common.Models.TaskStatus;
 
-namespace KpaFinAdvisors.Common.DatabaseContext
+namespace KpaFinAdvisors.Common
 {
     public class KpaFinAdvisorsDbContext : DbContext
     {

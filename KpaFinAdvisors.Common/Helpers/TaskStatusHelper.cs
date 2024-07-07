@@ -1,7 +1,7 @@
 ﻿using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
 
-namespace KpaFinAdvisors.ComplianceCalendar.HelperMethods
+namespace KpaFinAdvisors.Common.Helpers
 {
     public static class TaskStatusHelper
     {

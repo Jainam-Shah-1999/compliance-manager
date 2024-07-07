@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using KpaFinAdvisors.Common.DatabaseContext;
 using KpaFinAdvisors.Common.Models;
+using KpaFinAdvisors.Common;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {

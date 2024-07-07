@@ -1,13 +1,11 @@
 ﻿using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.Common.DatabaseContext;
-using KpaFinAdvisors.ComplianceCalendar.HelperMethods;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using KpaFinAdvisors.Common.Helpers;
+using KpaFinAdvisors.Common;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
-    [Authorize]
     public class DashboardController : Controller
     {
         private readonly KpaFinAdvisorsDbContext _context;
@@ -20,6 +18,7 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         // GET: DashboardController
         public IActionResult Index()
         {
+            var userclaim = User.Claims;
             var pendingTaskCountForEachUsers = from user in _context.Users.Where(x => x.UserType == UserTypeEnum.Client && !x.Inactive)
                                                let taskStatusQuery = _context.TaskStatus
                                                                      .Where(ts => ts.UserId == user.Id).ToList()

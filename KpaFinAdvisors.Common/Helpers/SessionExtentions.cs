@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
-namespace KpaFinAdvisors.ComplianceCalendar.HelperMethods
+namespace KpaFinAdvisors.Common.Helpers
 {
     public static class SessionExtensions
     {

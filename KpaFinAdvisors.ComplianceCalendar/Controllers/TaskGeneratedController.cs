@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using KpaFinAdvisors.Common.Enums;
 using KpaFinAdvisors.Common.Models;
-using KpaFinAdvisors.Common.DatabaseContext;
+using KpaFinAdvisors.Common;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {
