@@ -18,10 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KpaFinAdvisors.Blogs\KpaFinAdvisors.Blogs.csproj" />
     <ProjectReference Include="..\KpaFinAdvisors.CommonUI\KpaFinAdvisors.CommonUI.csproj" />
     <ProjectReference Include="..\KpaFinAdvisors.Common\KpaFinAdvisors.Common.csproj" />
-    <ProjectReference Include="..\KpaFinAdvisors.ComplianceCalendar\KpaFinAdvisors.ComplianceCalendar.csproj" />
   </ItemGroup>
 
 </Project>

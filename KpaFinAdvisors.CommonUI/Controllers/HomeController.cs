@@ -10,6 +10,8 @@ using KpaFinAdvisors.Common.Models;
 using KpaFinAdvisors.Common;
 using KpaFinAdvisors.Common.Helpers;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace KpaFinAdvisors.ComplianceCalendar.Controllers
 {

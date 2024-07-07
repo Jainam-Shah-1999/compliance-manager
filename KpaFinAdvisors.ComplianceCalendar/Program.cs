@@ -10,11 +10,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load base configuration
-var sharedConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "KpaFinAdvisors.Common");
-
 builder.Configuration
-    .SetBasePath(sharedConfigPath)
+    .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 // Load environment-specific configuration based on build configuration
