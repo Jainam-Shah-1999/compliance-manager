@@ -140,10 +140,14 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
                 return Problem("Entity set 'CalendarDbContext.Users'  is null.");
             }
             var user = await _context.Users.FindAsync(id);
+            if (user?.Id == 6)
+            {
+                return Problem("Cannot delete master user.");
+            }
             if (user != null)
             {
                 _context.Users.Remove(user);
-                _context.TaskStatus.Where(x => x.UserId == user.Id);
+                _context.TaskStatus.RemoveRange(_context.TaskStatus.Where(x => x.UserId == user.Id));
             }
 
             await _context.SaveChangesAsync();

@@ -143,6 +143,8 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
             if (task != null)
             {
                 _context.Tasks.Remove(task);
+                _context.TaskGenerated.RemoveRange(_context.TaskGenerated.Where(x => x.OriginalTaskId == id));
+                _context.TaskStatus.RemoveRange(_context.TaskStatus.Where(x => x.OriginalTaskId == id));
             }
 
             await _context.SaveChangesAsync();

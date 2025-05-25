@@ -20,7 +20,7 @@ namespace KpaFinAdvisors.ComplianceCalendar.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Holidays != null ?
-                        View(await _context.Holidays.ToListAsync()) :
+                        View(await _context.Holidays.OrderBy(x => x.HolidayDate).ToListAsync()) :
                         Problem("Entity set 'CalendarDbContext.Holidays'  is null.");
         }
 
